@@ -1,0 +1,26 @@
+/* ==============================================================================
+ * Antigravity IDE Markdown Preview RTL Stylesheet
+ * Project: https://github.com/mehdichamani/antigravity-rtl
+ * Target:  Antigravity IDE User Configuration (markdown-rtl.css)
+ * ============================================================================== */
+
+body {
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif !important;
+}
+
+p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th {
+    unicode-bidi: plaintext;
+    text-align: start;
+}
+
+pre, code, tt {
+    direction: ltr !important;
+    unicode-bidi: isolate !important;
+    text-align: left !important;
+    font-family: 'JetBrainsMono Nerd Font', 'Jet Brains Mono Nerd Font', monospace !important;
+}
+
+li:dir(rtl) {
+    direction: rtl;
+    text-align: right;
+}

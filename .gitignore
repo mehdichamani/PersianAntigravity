@@ -1,0 +1,9 @@
+# Antigravity RTL - Git Ignore
+*.bak
+*.backup
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

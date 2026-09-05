@@ -1,0 +1,131 @@
+/* ==============================================================================
+ * Antigravity IDE RTL & Persian/Arabic Typography Stylesheet
+ * Project: https://github.com/mehdichamani/antigravity-rtl
+ * Target:  Antigravity IDE (VS Code based workbench)
+ * ============================================================================== */
+
+/* ==========================================
+   Global Vazirmatn Font for Chat Panel & Artifacts
+   ========================================== */
+
+.antigravity-agent-side-panel,
+.antigravity-agent-side-panel p,
+.antigravity-agent-side-panel span,
+.antigravity-agent-side-panel li,
+.antigravity-agent-side-panel h1,
+.antigravity-agent-side-panel h2,
+.antigravity-agent-side-panel h3,
+.antigravity-agent-side-panel h4,
+.antigravity-agent-side-panel textarea,
+.antigravity-agent-side-panel input,
+.antigravity-agent-side-panel [contenteditable="true"],
+.jetski-custom-editor-pane,
+.jetski-custom-editor-pane p,
+.jetski-custom-editor-pane span,
+.jetski-custom-editor-pane li,
+.jetski-custom-editor-pane h1,
+.jetski-custom-editor-pane h2,
+.jetski-custom-editor-pane h3 {
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+}
+
+/* ==========================================
+   RTL Mode & Spacing Adjustments
+   ========================================== */
+
+.antigravity-is-rtl {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* Line height & list padding in central planning / artifact pane */
+.jetski-custom-editor-pane .antigravity-is-rtl {
+    line-height: 1.8 !important;
+}
+
+.jetski-custom-editor-pane ol.antigravity-is-rtl,
+.jetski-custom-editor-pane ul.antigravity-is-rtl {
+    padding-right: 2.25rem !important;
+    padding-left: 1rem !important;
+    margin-right: 0.5rem !important;
+}
+
+.jetski-custom-editor-pane li.antigravity-is-rtl {
+    padding-right: 0.35rem !important;
+    margin-bottom: 0.4rem !important;
+}
+
+/* Lateral margin and padding for planning pane */
+.jetski-custom-editor-pane > div,
+.jetski-custom-editor-pane .pb-6 {
+    padding-right: 2rem !important;
+    padding-left: 2rem !important;
+}
+
+/* Smart bidirectional input for user messages in chat prompt */
+.antigravity-agent-side-panel textarea,
+.antigravity-agent-side-panel input,
+.antigravity-agent-side-panel [contenteditable="true"] {
+    unicode-bidi: plaintext !important;
+    text-align: start !important;
+}
+
+/* ==========================================
+   Code Blocks: Strictly LTR & Monospace
+   ========================================== */
+
+.antigravity-agent-side-panel pre,
+.antigravity-agent-side-panel code,
+.antigravity-agent-side-panel pre *,
+.antigravity-agent-side-panel code *,
+.antigravity-agent-side-panel .interactive-result-code-block,
+.antigravity-agent-side-panel .code-block-container,
+.jetski-custom-editor-pane pre,
+.jetski-custom-editor-pane code,
+.jetski-custom-editor-pane pre *,
+.jetski-custom-editor-pane code *,
+.antigravity-is-rtl pre,
+.antigravity-is-rtl code,
+.antigravity-is-rtl .interactive-result-code-block,
+.antigravity-is-rtl .code-block-container {
+    direction: ltr !important;
+    unicode-bidi: isolate !important;
+    text-align: left !important;
+    font-family: 'JetBrainsMono Nerd Font', 'Jet Brains Mono Nerd Font', 'JetBrainsMono NF', monospace !important;
+}
+
+/* ==========================================
+   Preserve Editor Icon Fonts
+   ========================================== */
+
+.codicon,
+.codicon[class*='codicon-'],
+[class*='codicon'],
+.material-symbols-outlined,
+.material-icons,
+[class*='lucide'] {
+    font-family: codicon, 'Material Symbols Outlined', 'Material Icons', inherit !important;
+}
+
+/* ==========================================
+   Tables: Keep LTR for structured alignment
+   ========================================== */
+
+.antigravity-is-rtl table,
+.jetski-custom-editor-pane table {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* Optional header switch indicator */
+#antigravity-rtl-toggle-btn {
+    font-size: 14px !important;
+    font-weight: bold !important;
+    transition: opacity 0.2s, background 0.2s;
+    text-decoration: none !important;
+    cursor: pointer !important;
+}
+
+#antigravity-rtl-toggle-btn.antigravity-rtl-active {
+    color: #4facfe !important;
+}
