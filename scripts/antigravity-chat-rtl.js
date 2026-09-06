@@ -1,6 +1,6 @@
 /* ==============================================================================
- * Antigravity IDE Real-Time RTL Dynamic Detection Script
- * Project: https://github.com/mehdichamani/antigravity-rtl
+ * PersianAntigravityIDE - فارسی ساز محیط توسعه آنتی گرویتی
+ * Project: https://github.com/mehdichamani/PersianAntigravityIDE
  * Target:  Antigravity IDE Workbench DOM (MutationObserver)
  * ============================================================================== */
 

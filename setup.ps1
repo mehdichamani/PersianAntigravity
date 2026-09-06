@@ -1,13 +1,14 @@
 # ==============================================================================
-# Antigravity IDE RTL & Vazirmatn Setup & Automation Script (Windows)
+# PersianAntigravityIDE - فارسی ساز محیط توسعه آنتی گرویتی
+# Setup & Automation Script (Windows)
 # ==============================================================================
-# Project: https://github.com/mehdichamani/antigravity-rtl
+# Project: https://github.com/mehdichamani/PersianAntigravityIDE
 # Author:  Mehdi Chamani
 # License: MIT
 # Target:  Antigravity IDE (Windows PowerShell 7+)
 # ==============================================================================
 
-function Setup-AntigravityRtl {
+function Setup-PersianAntigravityIDE {
     [CmdletBinding(DefaultParameterSetName = 'Install')]
     param(
         [Parameter(ParameterSetName = 'Install')]
@@ -33,8 +34,8 @@ function Setup-AntigravityRtl {
     if (-not $Lang) {
         Write-Host ""
         Write-Host "======================================================================" -ForegroundColor Cyan
-        Write-Host "به پروژه Antigravity RTL خوش آمدید!" -ForegroundColor White
-        Write-Host "اگر این متن فارسی را بدون بههمریختگی میبینید، با فارسی ادامه دهید." -ForegroundColor Yellow
+        Write-Host "به پروژه فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) خوش آمدید!" -ForegroundColor White
+        Write-Host "اگر این متن فارسی را بدون به‌هم‌ریختگی می‌بینید، با فارسی ادامه دهید." -ForegroundColor Yellow
         Write-Host "----------------------------------------------------------------------" -ForegroundColor DarkGray
         Write-Host "If the Persian text above looks garbled or broken, continue in English." -ForegroundColor White
         Write-Host "======================================================================" -ForegroundColor Cyan
@@ -69,13 +70,13 @@ function Setup-AntigravityRtl {
             TrbReinstall         = "  - برنامه را مجدداً نصب کنید یا مسیر دقیق resources\app را با پارامتر AppDir- ارسال فرمایید."
             SuccessDetected      = "[v] نرم‌افزار Antigravity IDE با موفقیت شناسایی شد از طریق: {0}"
             AppDirectory         = "    مسیر برنامه: {0}"
-            VerifiedReady        = "[v] تمام فایل‌های هسته برنامه تأیید شدند. سیستم آماده اعمال راست‌چین‌سازی است!"
+            VerifiedReady        = "[v] تمام فایل‌های هسته برنامه تأیید شدند. سیستم آماده اعمال فارسی‌سازی و راست‌چین‌سازی است!"
             FontDetected         = "[v] قلم وزیرمتن (Vazirmatn) شناسایی شد."
             FontLocalInstall     = "[*] در حال نصب قلم وزیرمتن از مخزن محلی..."
             FontInstalled        = "[v] قلم وزیرمتن نصب و ثبت گردید."
             FontNotDetected      = "[!] هشدار: قلم وزیرمتن (Vazirmatn) در فونت‌های ویندوز یافت نشد."
             FontInstallGuide     = "    پیشنهاد می‌شود جهت زیبایی بیشتر، فونت Vazirmatn را نصب فرمایید."
-            StatusHeader         = "=== وضعیت راست‌چین‌سازی Antigravity IDE (ویندوز) ==="
+            StatusHeader         = "=== وضعیت فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE - ویندوز) ==="
             StatusAppDir         = "  مسیر برنامه:        {0}"
             StatusUserCfg        = "  تنظیمات کاربر:      {0}"
             StatusWorkbenchCss   = "  استایل CSS محیط:    {0}"
@@ -88,7 +89,7 @@ function Setup-AntigravityRtl {
             StatusMarkdown       = "  پیش‌نمایش مارک‌داون:  {0}"
             StatusConfigured     = "پیکربندی شده"
             StatusNotConfigured  = "پیکربندی نشده"
-            UninstHeader         = "=== بازگردانی تغییرات راست‌چین‌سازی Antigravity IDE (ویندوز) ==="
+            UninstHeader         = "=== بازگردانی تغییرات فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE - ویندوز) ==="
             UninstRestoredHtml   = "[v] فایل workbench.html از نسخه پشتیبان بازگردانی شد."
             UninstRemovedHtmlTag = "[v] تگ‌های راست‌چین از workbench.html حذف گردید."
             UninstRemovedCss     = "[v] فایل antigravity-chat-rtl.css حذف شد."
@@ -97,9 +98,9 @@ function Setup-AntigravityRtl {
             UninstRemovedMdCss   = "[v] فایل markdown-rtl.css حذف شد."
             UninstCleanedMdStyle = "[v] استایل‌های مارک‌داون از settings.json پاکسازی شد."
             UninstWarningCfg     = "[!] هشدار هنگام به‌روزرسانی settings.json: {0}"
-            UninstDone           = "راست‌چین‌سازی Antigravity IDE با موفقیت حذف گردید."
+            UninstDone           = "فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) با موفقیت حذف گردید."
             UninstRestart        = "لطفاً جهت اعمال، نرم‌افزار Antigravity IDE را مجدداً راه‌اندازی (Restart) کنید."
-            InstHeader           = "=== در حال نصب افزونه راست‌چین‌سازی و فونت وزیرمتن (ویندوز) ==="
+            InstHeader           = "=== در حال نصب فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE - ویندوز) ==="
             InstWriteCss         = "[*] در حال نوشتن فایل CSS محیط کاری -> {0}"
             InstWriteJs          = "[*] در حال نوشتن فایل JS محیط کاری -> {0}"
             InstPatchHtml        = "[*] در حال پچ کردن فایل {0}"
@@ -112,7 +113,7 @@ function Setup-AntigravityRtl {
             InstNoticeProd       = "[!] هشدار در product.json: {0}"
             InstConfigMd         = "[*] در حال تنظیم پیش‌نمایش مارک‌داون..."
             InstMdSuccess        = "[v] استایل‌ها و تنظیمات مارک‌داون راست‌چین ذخیره شد."
-            InstSuccess          = "پروژه راست‌چین‌سازی و فونت وزیرمتن با موفقیت بر روی Antigravity IDE اعمال شد!"
+            InstSuccess          = "فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) با موفقیت اعمال شد!"
             InstRestart          = "لطفاً نرم‌افزار Antigravity IDE را ببندید و دوباره باز کنید تا تغییرات اعمال گردند."
         }
     } else {
@@ -137,7 +138,7 @@ function Setup-AntigravityRtl {
             FontInstalled        = "[v] Vazirmatn font installed and registered."
             FontNotDetected      = "[!] Warning: Vazirmatn font is not detected in Windows Fonts."
             FontInstallGuide     = "    Please install Vazirmatn font (e.g. from Google Fonts or GitHub)."
-            StatusHeader         = "=== Antigravity IDE RTL Status (Windows) ==="
+            StatusHeader         = "=== PersianAntigravityIDE Status (Windows) ==="
             StatusAppDir         = "  App Directory:    {0}"
             StatusUserCfg        = "  User Config:      {0}"
             StatusWorkbenchCss   = "  Workbench CSS:    {0}"
@@ -150,7 +151,7 @@ function Setup-AntigravityRtl {
             StatusMarkdown       = "  Markdown Preview: {0}"
             StatusConfigured     = "Configured"
             StatusNotConfigured  = "Not Configured"
-            UninstHeader         = "=== Reverting Antigravity IDE RTL Setup (Windows) ==="
+            UninstHeader         = "=== Reverting PersianAntigravityIDE Setup (Windows) ==="
             UninstRestoredHtml   = "[v] Restored workbench.html from backup."
             UninstRemovedHtmlTag = "[v] Removed RTL tags from workbench.html."
             UninstRemovedCss     = "[v] Removed antigravity-chat-rtl.css."
@@ -159,9 +160,9 @@ function Setup-AntigravityRtl {
             UninstRemovedMdCss   = "[v] Removed markdown-rtl.css."
             UninstCleanedMdStyle = "[v] Cleaned up markdown styles from settings.json."
             UninstWarningCfg     = "[!] Warning updating settings.json: {0}"
-            UninstDone           = "Antigravity IDE RTL uninstalled cleanly."
+            UninstDone           = "PersianAntigravityIDE uninstalled cleanly."
             UninstRestart        = "Please restart Antigravity IDE."
-            InstHeader           = "=== Installing Antigravity IDE RTL & Vazirmatn Font (Windows) ==="
+            InstHeader           = "=== Installing PersianAntigravityIDE (Windows) ==="
             InstWriteCss         = "[*] Writing workbench CSS -> {0}"
             InstWriteJs          = "[*] Writing workbench JS -> {0}"
             InstPatchHtml        = "[*] Patching {0}"
@@ -174,7 +175,7 @@ function Setup-AntigravityRtl {
             InstNoticeProd       = "[!] Notice on product.json: {0}"
             InstConfigMd         = "[*] Configuring user Markdown preview..."
             InstMdSuccess        = "[v] Markdown RTL preview styles & settings configured."
-            InstSuccess          = "Antigravity IDE RTL and Vazirmatn successfully installed!"
+            InstSuccess          = "PersianAntigravityIDE and Vazirmatn successfully installed!"
             InstRestart          = "Please restart Antigravity IDE to apply all visual changes."
         }
     }
@@ -772,9 +773,10 @@ li:dir(rtl) {
 }
 
 # Alias for seamless usage
-Set-Alias -Name setup-antigravity-rtl -Value Setup-AntigravityRtl -Scope Global -ErrorAction SilentlyContinue
+Set-Alias -Name setup-persian-antigravity-ide -Value Setup-PersianAntigravityIDE -Scope Global -ErrorAction SilentlyContinue
+Set-Alias -Name setup-antigravity-rtl -Value Setup-PersianAntigravityIDE -Scope Global -ErrorAction SilentlyContinue
 
 # If executed directly as a script (not dot-sourced)
 if ($MyInvocation.InvocationName -ne '.' -and $MyInvocation.Line -match 'setup\.ps1') {
-    Setup-AntigravityRtl @args
+    Setup-PersianAntigravityIDE @args
 }

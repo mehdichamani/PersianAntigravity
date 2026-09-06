@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Antigravity IDE RTL & Vazirmatn Setup & Automation Script
+# PersianAntigravityIDE - فارسی ساز محیط توسعه آنتی گرویتی
+# Setup & Automation Script
 # ==============================================================================
-# Project: https://github.com/mehdichamani/antigravity-rtl
+# Project: https://github.com/mehdichamani/PersianAntigravityIDE
 # Author:  Mehdi Chamani
 # License: MIT
 # Target:  Antigravity IDE (Linux / macOS)
@@ -43,8 +44,8 @@ if [[ -z "$LANG_CHOICE" ]]; then
     first_arg="${FILTERED_ARGS[0]:-}"
     if [[ "$first_arg" != "help" && "$first_arg" != "--help" && "$first_arg" != "-h" ]] && [ -t 0 ]; then
         echo -e "${CYAN}======================================================================${NC}"
-        echo -e "به پروژه Antigravity RTL خوش آمدید!"
-        echo -e "${YELLOW}اگر این متن فارسی را بدون بههمریختگی میبینید، با فارسی ادامه دهید.${NC}"
+        echo -e "به پروژه فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) خوش آمدید!"
+        echo -e "${YELLOW}اگر این متن فارسی را بدون به‌هم‌ریختگی می‌بینید، با فارسی ادامه دهید.${NC}"
         echo -e "----------------------------------------------------------------------"
         echo -e "If the Persian text above looks garbled or broken, continue in English."
         echo -e "${CYAN}======================================================================${NC}"
@@ -78,7 +79,7 @@ if [[ "$LANG_CHOICE" == "fa" ]]; then
     M[TRB_CORRUPT]="نصب برنامه ناقص یا آسیب‌دیده به نظر می‌رسد. لطفاً Antigravity IDE را مجدداً نصب کنید.\n"
     M[SUCCESS_DETECT]="[✓] نرم‌افزار Antigravity IDE با موفقیت شناسایی شد از طریق: "
     M[APP_DIR_LBL]="    مسیر برنامه: "
-    M[CORE_VERIFIED]="[✓] تمام فایل‌های هسته برنامه تأیید شدند. سیستم آماده اعمال راست‌چین‌سازی است!\n"
+    M[CORE_VERIFIED]="[✓] تمام فایل‌های هسته برنامه تأیید شدند. سیستم آماده اعمال فارسی‌سازی و راست‌چین‌سازی است!\n"
     M[ADMIN_REQ]="[!] برای تغییر فایل‌های Antigravity IDE به دسترسی مدیر (sudo) نیاز است."
     M[ADMIN_ELEVATING]="[*] در حال ارتقای دسترسی از طریق sudo..."
     M[FONT_LOCAL]="[*] در حال نصب قلم وزیرمتن از مخزن محلی..."
@@ -99,10 +100,10 @@ if [[ "$LANG_CHOICE" == "fa" ]]; then
     M[CHK_BYPASSED]="[✓] بای‌پس چک‌سام اعمال شد (جلوگیری از خطای corrupt/unsupported)."
     M[CFG_MD]="[*] در حال تنظیم پیش‌نمایش مارک‌داون (Ctrl+Shift+V)..."
     M[MD_CONFIGURED]="[✓] استایل‌ها و تنظیمات مارک‌داون راست‌چین پیکربندی شد."
-    M[INST_HEADER]="=== در حال نصب افزونه راست‌چین‌سازی و فونت وزیرمتن ==="
-    M[INST_SUCCESS]="✔ پروژه راست‌چین‌سازی Antigravity IDE با موفقیت نصب شد!"
+    M[INST_HEADER]="=== در حال نصب فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) ==="
+    M[INST_SUCCESS]="✔ فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) با موفقیت نصب شد!"
     M[INST_RESTART]="لطفاً نرم‌افزار Antigravity IDE را ببندید و دوباره باز کنید تا تغییرات اعمال گردند."
-    M[UNINST_HEADER]="=== بازگردانی تغییرات راست‌چین‌سازی Antigravity IDE ==="
+    M[UNINST_HEADER]="=== بازگردانی تغییرات فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) ==="
     M[RESTORE_HTML]="[✓] فایل workbench.html از نسخه پشتیبان بازگردانی شد."
     M[REMOVE_TAGS]="[✓] تگ‌های راست‌چین از workbench.html حذف گردید."
     M[REMOVE_CSS]="[✓] فایل antigravity-chat-rtl.css حذف شد."
@@ -110,9 +111,9 @@ if [[ "$LANG_CHOICE" == "fa" ]]; then
     M[RESTORE_PROD]="[✓] فایل product.json از نسخه پشتیبان بازگردانی شد."
     M[REMOVE_MD_CSS]="[✓] فایل markdown-rtl.css حذف شد."
     M[CLEAN_MD_SETTING]="[✓] استایل‌های مارک‌داون از settings.json پاکسازی شد."
-    M[UNINST_SUCCESS]="✔ راست‌چین‌سازی Antigravity IDE با موفقیت حذف گردید."
+    M[UNINST_SUCCESS]="✔ فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) با موفقیت حذف گردید."
     M[UNINST_RESTART]="لطفاً نرم‌افزار Antigravity IDE را مجدداً راه‌اندازی کنید."
-    M[STATUS_HEADER]="=== وضعیت راست‌چین‌سازی Antigravity IDE ==="
+    M[STATUS_HEADER]="=== وضعیت فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) ==="
     M[STATUS_APP_DIR]="  مسیر برنامه:        "
     M[STATUS_USER]="  کاربر هدف:          "
     M[STATUS_CONFIG]="  تنظیمات کاربر:      "
@@ -163,10 +164,10 @@ else
     M[CHK_BYPASSED]="[✓] Checksum bypass applied (prevents unsupported / corrupt warnings)."
     M[CFG_MD]="[*] Configuring user Markdown preview (Ctrl+Shift+V)..."
     M[MD_CONFIGURED]="[✓] Markdown RTL preview styles & settings configured."
-    M[INST_HEADER]="=== Installing Antigravity IDE RTL & Vazirmatn Font ==="
-    M[INST_SUCCESS]="✔ Antigravity IDE RTL successfully installed!"
+    M[INST_HEADER]="=== Installing PersianAntigravityIDE ==="
+    M[INST_SUCCESS]="✔ PersianAntigravityIDE successfully installed!"
     M[INST_RESTART]="Please restart Antigravity IDE to apply all visual changes."
-    M[UNINST_HEADER]="=== Reverting Antigravity IDE RTL Setup ==="
+    M[UNINST_HEADER]="=== Reverting PersianAntigravityIDE Setup ==="
     M[RESTORE_HTML]="[✓] Restored workbench.html from backup."
     M[REMOVE_TAGS]="[✓] Removed RTL tags from workbench.html."
     M[REMOVE_CSS]="[✓] Removed antigravity-chat-rtl.css."
@@ -174,9 +175,9 @@ else
     M[RESTORE_PROD]="[✓] Restored product.json from backup."
     M[REMOVE_MD_CSS]="[✓] Removed markdown-rtl.css."
     M[CLEAN_MD_SETTING]="[✓] Cleaned up markdown styles from settings.json."
-    M[UNINST_SUCCESS]="✔ Antigravity IDE RTL uninstalled cleanly."
+    M[UNINST_SUCCESS]="✔ PersianAntigravityIDE uninstalled cleanly."
     M[UNINST_RESTART]="Please restart Antigravity IDE."
-    M[STATUS_HEADER]="=== Antigravity IDE RTL Status ==="
+    M[STATUS_HEADER]="=== PersianAntigravityIDE Status ==="
     M[STATUS_APP_DIR]="  App Directory:    "
     M[STATUS_USER]="  Target User:      "
     M[STATUS_CONFIG]="  User Config:      "
@@ -338,8 +339,8 @@ write_css_file() {
     else
         cat <<'EOF' > "$target"
 /* ==============================================================================
- * Antigravity IDE RTL & Persian/Arabic Typography Stylesheet
- * Project: https://github.com/mehdichamani/antigravity-rtl
+ * PersianAntigravityIDE - فارسی ساز محیط توسعه آنتی گرویتی
+ * Project: https://github.com/mehdichamani/PersianAntigravityIDE
  * ============================================================================== */
 
 .antigravity-agent-side-panel,

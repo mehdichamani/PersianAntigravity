@@ -1,4 +1,4 @@
-# پشتیبانی راست‌به‌چپ (RTL) و فونت وزیرمتن در Antigravity IDE 🇮🇷 🇦🇪
+# فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) 🇮🇷 🇦🇪
 
 <div dir="rtl">
 
@@ -18,7 +18,7 @@
 
 ---
 
-## 🎯 چرا Antigravity RTL؟
+## 🎯 چرا فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE)؟
 
 محیط توسعه **Google Antigravity IDE** به طور پیش‌فرض متون زبان‌های راست‌به‌چپ (مانند فارسی و عربی) را در پنل چت هوش مصنوعی (`Chat Side Panel`) و صفحات برنامه‌ریزی معماری (`Implementation Plans` و `Artifacts`) به صورت چپ‌چین و نامنظم نمایش می‌دهد. افزونه‌های معمول VS Code نیز یا روی Antigravity IDE کار نمی‌کنند یا سرعت محیط را کاهش داده و خطوط کد را به اشتباه راست‌چین می‌کنند.
 
@@ -50,7 +50,7 @@
 دستور زیر را در ترمینال (Bash/Zsh) اجرا کنید:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/mehdichamani/antigravity-rtl/main/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.sh | bash
 ```
 
 ### 🪟 ویندوز (Windows PowerShell)
@@ -58,7 +58,7 @@ curl -fsSL https://raw.githubusercontent.com/mehdichamani/antigravity-rtl/main/s
 پنجره PowerShell (ترجیحاً نسخه 7 یا بالاتر) را باز کرده و دستور زیر را وارد کنید:
 
 ```powershell
-irm https://raw.githubusercontent.com/mehdichamani/antigravity-rtl/main/setup.ps1 | iex
+irm https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.ps1 | iex
 ```
 
 > **نکته:** پس از اتمام نصب، محیط **Antigravity IDE** را یک‌بار ببندید و مجدداً باز کنید تا تغییرات بصری اعمال شوند.
@@ -70,8 +70,8 @@ irm https://raw.githubusercontent.com/mehdichamani/antigravity-rtl/main/setup.ps
 در صورت تمایل به اجرای محلی یا بررسی کدها قبل از نصب:
 
 ```bash
-git clone https://github.com/mehdichamani/antigravity-rtl.git ~/projects/antigravity-rtl
-cd ~/projects/antigravity-rtl
+git clone https://github.com/mehdichamani/PersianAntigravityIDE.git ~/projects/PersianAntigravityIDE
+cd ~/projects/PersianAntigravityIDE
 ```
 
 ### در لینوکس و مک (`setup.sh`)
@@ -107,7 +107,7 @@ pwsh -File ./setup.ps1 -Uninstall
 ## 📁 ساختار مخزن
 
 ```text
-antigravity-rtl/
+PersianAntigravityIDE/
 ├── .gitignore
 ├── LICENSE                          # مجوز نرم‌افزار (MIT)
 ├── README.md                        # مستندات فارسی پروژه

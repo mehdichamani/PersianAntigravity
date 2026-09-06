@@ -1,4 +1,4 @@
-# Antigravity RTL & Persian/Arabic Typography 🇮🇷 🇦🇪
+# PersianAntigravityIDE - RTL & Persian Typography for Antigravity IDE 🇮🇷 🇦🇪
 
 > **Native, Extension-Free Right-to-Left (RTL) & Vazirmatn Font Support Exclusively Crafted for Antigravity IDE.**
 
@@ -29,7 +29,7 @@
 Run the installer via `curl`:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/mehdichamani/antigravity-rtl/main/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.sh | bash
 ```
 
 ### Windows (PowerShell 7+)
@@ -37,7 +37,7 @@ curl -fsSL https://raw.githubusercontent.com/mehdichamani/antigravity-rtl/main/s
 Run the installer in PowerShell:
 
 ```powershell
-irm https://raw.githubusercontent.com/mehdichamani/antigravity-rtl/main/setup.ps1 | iex
+irm https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.ps1 | iex
 ```
 
 *After installation, restart Antigravity IDE to apply visual changes.*
@@ -49,8 +49,8 @@ irm https://raw.githubusercontent.com/mehdichamani/antigravity-rtl/main/setup.ps
 If you prefer to clone the repository locally:
 
 ```bash
-git clone https://github.com/mehdichamani/antigravity-rtl.git ~/projects/antigravity-rtl
-cd ~/projects/antigravity-rtl
+git clone https://github.com/mehdichamani/PersianAntigravityIDE.git ~/projects/PersianAntigravityIDE
+cd ~/projects/PersianAntigravityIDE
 ```
 
 ### Linux / macOS (`setup.sh`)
@@ -86,7 +86,7 @@ pwsh -File ./setup.ps1 -Uninstall
 ## 📁 Project Structure
 
 ```
-antigravity-rtl/
+PersianAntigravityIDE/
 ├── .gitignore
 ├── LICENSE                          # MIT License
 ├── README.md                        # Persian Documentation (مستندات فارسی)
