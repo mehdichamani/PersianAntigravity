@@ -1,0 +1,135 @@
+# Antigravity RTL & Persian/Arabic Typography 🇮🇷 🇦🇪
+
+> **Native, Extension-Free Right-to-Left (RTL) & Vazirmatn Font Support Exclusively Crafted for Antigravity IDE.**
+
+[🇮🇷 مستندات فارسی (Persian)](README.md) | [English Documentation](README.en.md)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-informational.svg)](#)
+[![Target](https://img.shields.io/badge/Target-Antigravity%20IDE-blueviolet.svg)](#)
+
+---
+
+## ⚡ Highlights
+
+- 🚫 **Zero Extensions Required:** Operates natively without bloated or incompatible VS Code extensions.
+- 🔄 **Real-Time Dynamic RTL Detection:** Built-in lightweight `MutationObserver` detects Persian, Arabic, and Hebrew characters in real-time as the AI agent streams responses.
+- 🎨 **Beautiful Vazirmatn Typography:** Polished typography across the **Chat Side Panel** (`.antigravity-agent-side-panel`), **Implementation Plans**, **Artifacts**, and **Walkthroughs** (`.jetski-custom-editor-pane`).
+- 💻 **Strict LTR Code Blocks:** Code blocks (`pre`, `code`, `.interactive-result-code-block`) remain strictly LTR with monospaced font (`JetBrainsMono Nerd Font`), ensuring uncompromised readability.
+- 🛡️ **No "Corrupted / Unsupported" Warnings:** Cleanly strips the workbench hash from `product.json` checksums to prevent annoying warning banners.
+- 📝 **Markdown Preview RTL:** Preconfigures built-in Markdown preview (`Ctrl+Shift+V`) with RTL direction and Vazirmatn font.
+- 🔄 **Clean Rollback & Status Check:** Safely creates `.bak` backups before modifying files; uninstall restores the original state with one command.
+
+---
+
+## 🚀 Quick Start (One-Liner Installation)
+
+### Linux & macOS
+
+Run the installer via `curl`:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/mehdichamani/antigravity-rtl/main/setup.sh | bash
+```
+
+### Windows (PowerShell 7+)
+
+Run the installer in PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/mehdichamani/antigravity-rtl/main/setup.ps1 | iex
+```
+
+*After installation, restart Antigravity IDE to apply visual changes.*
+
+---
+
+## 💻 Local Clone & Manual Usage
+
+If you prefer to clone the repository locally:
+
+```bash
+git clone https://github.com/mehdichamani/antigravity-rtl.git ~/projects/antigravity-rtl
+cd ~/projects/antigravity-rtl
+```
+
+### Linux / macOS (`setup.sh`)
+
+```bash
+# Check current installation status
+./setup.sh status
+
+# Install / Apply patches
+./setup.sh install
+
+# Uninstall / Restore original state
+./setup.sh uninstall
+```
+
+> **Note on Permissions:** Core Antigravity IDE files on Linux reside in `/opt/antigravity-ide/`. The script automatically prompts for `sudo` elevation only when modifying system files.
+
+### Windows (`setup.ps1`)
+
+```powershell
+# Check current status
+pwsh -File ./setup.ps1 -Status
+
+# Install / Apply patches
+pwsh -File ./setup.ps1 -Install
+
+# Uninstall / Revert
+pwsh -File ./setup.ps1 -Uninstall
+```
+
+---
+
+## 📁 Project Structure
+
+```
+antigravity-rtl/
+├── .gitignore
+├── LICENSE                          # MIT License
+├── README.md                        # Persian Documentation (مستندات فارسی)
+├── README.en.md                     # English Documentation
+├── setup.sh                         # Linux/macOS installation script
+├── setup.ps1                        # Windows PowerShell installation script
+├── styles/
+│   ├── antigravity-chat-rtl.css     # Workbench chat & artifact stylesheet
+│   └── markdown-rtl.css             # User Markdown preview stylesheet
+└── scripts/
+    └── antigravity-chat-rtl.js      # MutationObserver real-time RTL script
+```
+
+---
+
+## ⚙️ How It Works
+
+1. **Workbench Injection:** The installer injects links to `antigravity-chat-rtl.css` and `antigravity-chat-rtl.js` directly into `out/vs/code/electron-browser/workbench/workbench.html`.
+2. **Dynamic Mutation Observer:** `antigravity-chat-rtl.js` listens to DOM subtree updates. Whenever text matches Persian/Arabic Unicode ranges (`[\u0600-\u06FF...]`), it applies the `.antigravity-is-rtl` class.
+3. **Typography & Spacing:** `antigravity-chat-rtl.css` increases line height (`line-height: 1.8`), refines list paddings for RTL numbering, and forces code blocks and tables to maintain LTR formatting.
+4. **Checksum Bypass:** Electron-based VS Code applications verify file integrity against hashes in `product.json`. The script safely removes `workbench.html` from `checksums`, completely silencing the *"Your installation is corrupt"* warning.
+5. **Markdown Preview:** Injects `markdown-rtl.css` into `~/.config/Antigravity IDE/User/settings.json` under `markdown.styles`.
+
+---
+
+## 🔤 Prerequisites: Vazirmatn Font
+
+For the best experience, ensure the **Vazirmatn** font is installed on your operating system:
+
+- **Arch / Omarchy Linux:**
+  ```bash
+  yay -S --needed ttf-vazirmatn
+  ```
+- **Debian / Ubuntu:**
+  ```bash
+  sudo apt install fonts-vazirmatn
+  ```
+- **Windows:** Download and install from [Google Fonts - Vazirmatn](https://fonts.google.com/specimen/Vazirmatn) or GitHub releases.
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
+
+Developed with ❤️ by [Mehdi Chamani](https://github.com/mehdichamani).

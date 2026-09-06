@@ -21,6 +21,181 @@ NC='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
+# Language Selection (Interactive Persian test / Terminal compatibility)
+LANG_CHOICE=""
+FILTERED_ARGS=()
+for arg in "$@"; do
+    case "$arg" in
+        --lang=fa|-lang=fa|--fa)
+            LANG_CHOICE="fa"
+            ;;
+        --lang=en|-lang=en|--en)
+            LANG_CHOICE="en"
+            ;;
+        *)
+            FILTERED_ARGS+=("$arg")
+            ;;
+    esac
+done
+
+if [[ -z "$LANG_CHOICE" ]]; then
+    # Don't prompt if help or non-interactive (no tty)
+    first_arg="${FILTERED_ARGS[0]:-}"
+    if [[ "$first_arg" != "help" && "$first_arg" != "--help" && "$first_arg" != "-h" ]] && [ -t 0 ]; then
+        echo -e "${CYAN}======================================================================${NC}"
+        echo -e "به پروژه Antigravity RTL خوش آمدید!"
+        echo -e "${YELLOW}اگر این متن فارسی را بدون بههمریختگی میبینید، با فارسی ادامه دهید.${NC}"
+        echo -e "----------------------------------------------------------------------"
+        echo -e "If the Persian text above looks garbled or broken, continue in English."
+        echo -e "${CYAN}======================================================================${NC}"
+        echo -e "  [1] فارسی (Persian)"
+        echo -e "  [2] English [Default]\n"
+
+        read -r -p "Select language / انتخاب زبان [1/2] (Default: 2): " user_input || user_input=""
+        if [[ "$user_input" =~ ^[[:space:]]*1[[:space:]]*$ ]]; then
+            LANG_CHOICE="fa"
+            echo -e "${GREEN}زبان فارسی انتخاب شد.${NC}\n"
+        else
+            LANG_CHOICE="en"
+            echo -e "${GREEN}English selected.${NC}\n"
+        fi
+    else
+        LANG_CHOICE="en"
+    fi
+fi
+
+# Localization dictionary
+declare -A M
+if [[ "$LANG_CHOICE" == "fa" ]]; then
+    M[ERR_APP_DIR]="\n[✗] خطا: پوشه resources/app نرم‌افزار Antigravity IDE پیدا نشد!"
+    M[ERR_PATH_DET]="    دستور antigravity-ide در PATH یافت نشد و مسیرهای پیش‌فرض نیز وجود ندارند.\n"
+    M[TRB_TITLE]="راهنما و روش‌های رفع مشکل:"
+    M[TRB_STEP1]="  1. اطمینان حاصل کنید که Antigravity IDE روی سیستم شما نصب است."
+    M[TRB_STEP2]="  2. مسیر حاوی antigravity-ide را به متغیر PATH سیستم خود اضافه کنید."
+    M[TRB_STEP3]="  3. یا متغیر محیطی ANTIGRAVITY_APP_DIR را قبل از اجرای اسکریپت export کنید:"
+    M[ERR_MISSING]="\n[✗] خطا: فایل‌های اصلی و حیاتی Antigravity IDE یافت نشدند در: "
+    M[MISSING_ITEM]="    یافت نشد: "
+    M[TRB_CORRUPT]="نصب برنامه ناقص یا آسیب‌دیده به نظر می‌رسد. لطفاً Antigravity IDE را مجدداً نصب کنید.\n"
+    M[SUCCESS_DETECT]="[✓] نرم‌افزار Antigravity IDE با موفقیت شناسایی شد از طریق: "
+    M[APP_DIR_LBL]="    مسیر برنامه: "
+    M[CORE_VERIFIED]="[✓] تمام فایل‌های هسته برنامه تأیید شدند. سیستم آماده اعمال راست‌چین‌سازی است!\n"
+    M[ADMIN_REQ]="[!] برای تغییر فایل‌های Antigravity IDE به دسترسی مدیر (sudo) نیاز است."
+    M[ADMIN_ELEVATING]="[*] در حال ارتقای دسترسی از طریق sudo..."
+    M[FONT_LOCAL]="[*] در حال نصب قلم وزیرمتن از مخزن محلی..."
+    M[FONT_LOCAL_OK]="[✓] قلم وزیرمتن با موفقیت نصب شد."
+    M[FONT_WARN]="[!] هشدار: قلم وزیرمتن روی سیستم شما شناسایی نشد."
+    M[FONT_ARCH]="    دستور نصب در Arch/Omarchy:  "
+    M[FONT_DEB]="    دستور نصب در Debian/Ubuntu: "
+    M[FONT_DETECTED]="[✓] قلم وزیرمتن شناسایی شد."
+    M[WRITE_CSS]="[*] در حال نوشتن فایل CSS محیط کاری -> "
+    M[WRITE_JS]="[*] در حال نوشتن فایل JS محیط کاری -> "
+    M[PATCH_HTML]="[*] در حال پچ کردن "
+    M[BACKUP_CREATED]="[i] نسخه پشتیبان ایجاد شد: "
+    M[INJECT_CSS]="[✓] استایل antigravity-chat-rtl.css به workbench.html اضافه شد."
+    M[CSS_EXISTS]="[i] لینک CSS قبلاً در workbench.html وجود دارد."
+    M[INJECT_JS]="[✓] اسکریپت antigravity-chat-rtl.js به workbench.html اضافه شد."
+    M[JS_EXISTS]="[i] تگ اسکریپت JS قبلاً در workbench.html وجود دارد."
+    M[REMOVE_CHK]="[*] در حال غیرفعال‌سازی بررسی چک‌سام در product.json..."
+    M[CHK_BYPASSED]="[✓] بای‌پس چک‌سام اعمال شد (جلوگیری از خطای corrupt/unsupported)."
+    M[CFG_MD]="[*] در حال تنظیم پیش‌نمایش مارک‌داون (Ctrl+Shift+V)..."
+    M[MD_CONFIGURED]="[✓] استایل‌ها و تنظیمات مارک‌داون راست‌چین پیکربندی شد."
+    M[INST_HEADER]="=== در حال نصب افزونه راست‌چین‌سازی و فونت وزیرمتن ==="
+    M[INST_SUCCESS]="✔ پروژه راست‌چین‌سازی Antigravity IDE با موفقیت نصب شد!"
+    M[INST_RESTART]="لطفاً نرم‌افزار Antigravity IDE را ببندید و دوباره باز کنید تا تغییرات اعمال گردند."
+    M[UNINST_HEADER]="=== بازگردانی تغییرات راست‌چین‌سازی Antigravity IDE ==="
+    M[RESTORE_HTML]="[✓] فایل workbench.html از نسخه پشتیبان بازگردانی شد."
+    M[REMOVE_TAGS]="[✓] تگ‌های راست‌چین از workbench.html حذف گردید."
+    M[REMOVE_CSS]="[✓] فایل antigravity-chat-rtl.css حذف شد."
+    M[REMOVE_JS]="[✓] فایل antigravity-chat-rtl.js حذف شد."
+    M[RESTORE_PROD]="[✓] فایل product.json از نسخه پشتیبان بازگردانی شد."
+    M[REMOVE_MD_CSS]="[✓] فایل markdown-rtl.css حذف شد."
+    M[CLEAN_MD_SETTING]="[✓] استایل‌های مارک‌داون از settings.json پاکسازی شد."
+    M[UNINST_SUCCESS]="✔ راست‌چین‌سازی Antigravity IDE با موفقیت حذف گردید."
+    M[UNINST_RESTART]="لطفاً نرم‌افزار Antigravity IDE را مجدداً راه‌اندازی کنید."
+    M[STATUS_HEADER]="=== وضعیت راست‌چین‌سازی Antigravity IDE ==="
+    M[STATUS_APP_DIR]="  مسیر برنامه:        "
+    M[STATUS_USER]="  کاربر هدف:          "
+    M[STATUS_CONFIG]="  تنظیمات کاربر:      "
+    M[STATUS_WB_CSS]="  استایل CSS محیط:    "
+    M[STATUS_WB_JS]="  اسکریپت JS محیط:    "
+    M[STATUS_HTML]="  workbench.html:   "
+    M[STATUS_CHK]="  بای‌پس چک‌سام:      "
+    M[STATUS_MD]="  پیش‌نمایش مارک‌داون:  "
+    M[STATUS_INSTALLED]="نصب شده"
+    M[STATUS_MISSING]="یافت نشد"
+    M[STATUS_PATCHED]="پچ شده (CSS و JS متصل هستند)"
+    M[STATUS_PARTIAL]="پچ ناقص (فقط CSS)"
+    M[STATUS_NOT_PATCHED]="پچ نشده"
+    M[STATUS_BYPASS_ACTIVE]="فعال (بدون خطای خراب بودن فایل)"
+    M[STATUS_BYPASS_PENDING]="غیرفعال / در انتظار"
+    M[STATUS_CONFIGURED]="پیکربندی شده"
+    M[STATUS_NOT_CONFIGURED]="پیکربندی نشده"
+else
+    M[ERR_APP_DIR]="\n[✗] Error: Antigravity IDE 'resources/app' directory could not be found!"
+    M[ERR_PATH_DET]="    The 'antigravity-ide' command was not found in your PATH, and default directories were missing.\n"
+    M[TRB_TITLE]="Troubleshooting & Solutions:"
+    M[TRB_STEP1]="  1. Ensure Antigravity IDE is installed on your machine."
+    M[TRB_STEP2]="  2. Make sure the directory containing 'antigravity-ide' is added to your PATH."
+    M[TRB_STEP3]="  3. Or export ANTIGRAVITY_APP_DIR before running this script:"
+    M[ERR_MISSING]="\n[✗] Error: Required Antigravity IDE core files are missing in: "
+    M[MISSING_ITEM]="    Missing: "
+    M[TRB_CORRUPT]="Your installation seems corrupted or incomplete. Please reinstall Antigravity IDE.\n"
+    M[SUCCESS_DETECT]="[✓] Antigravity IDE detected successfully via: "
+    M[APP_DIR_LBL]="    App Directory: "
+    M[CORE_VERIFIED]="[✓] All core files verified. Environment is ready to apply RTL patches!\n"
+    M[ADMIN_REQ]="[!] Administrative privileges required to modify Antigravity IDE files."
+    M[ADMIN_ELEVATING]="[*] Elevating privileges via sudo..."
+    M[FONT_LOCAL]="[*] Installing Vazirmatn from local repository..."
+    M[FONT_LOCAL_OK]="[✓] Vazirmatn font installed successfully."
+    M[FONT_WARN]="[!] Warning: Vazirmatn font not detected on your system."
+    M[FONT_ARCH]="    To install on Arch/Omarchy: "
+    M[FONT_DEB]="    To install on Debian/Ubuntu: "
+    M[FONT_DETECTED]="[✓] Vazirmatn font detected."
+    M[WRITE_CSS]="[*] Writing workbench CSS -> "
+    M[WRITE_JS]="[*] Writing workbench JS -> "
+    M[PATCH_HTML]="[*] Patching "
+    M[BACKUP_CREATED]="[i] Created backup: "
+    M[INJECT_CSS]="[✓] Injected antigravity-chat-rtl.css into workbench.html"
+    M[CSS_EXISTS]="[i] CSS link already present in workbench.html"
+    M[INJECT_JS]="[✓] Injected antigravity-chat-rtl.js into workbench.html"
+    M[JS_EXISTS]="[i] JS script already present in workbench.html"
+    M[REMOVE_CHK]="[*] Removing checksum verification for workbench.html in "
+    M[CHK_BYPASSED]="[✓] Checksum bypass applied (prevents unsupported / corrupt warnings)."
+    M[CFG_MD]="[*] Configuring user Markdown preview (Ctrl+Shift+V)..."
+    M[MD_CONFIGURED]="[✓] Markdown RTL preview styles & settings configured."
+    M[INST_HEADER]="=== Installing Antigravity IDE RTL & Vazirmatn Font ==="
+    M[INST_SUCCESS]="✔ Antigravity IDE RTL successfully installed!"
+    M[INST_RESTART]="Please restart Antigravity IDE to apply all visual changes."
+    M[UNINST_HEADER]="=== Reverting Antigravity IDE RTL Setup ==="
+    M[RESTORE_HTML]="[✓] Restored workbench.html from backup."
+    M[REMOVE_TAGS]="[✓] Removed RTL tags from workbench.html."
+    M[REMOVE_CSS]="[✓] Removed antigravity-chat-rtl.css."
+    M[REMOVE_JS]="[✓] Removed antigravity-chat-rtl.js."
+    M[RESTORE_PROD]="[✓] Restored product.json from backup."
+    M[REMOVE_MD_CSS]="[✓] Removed markdown-rtl.css."
+    M[CLEAN_MD_SETTING]="[✓] Cleaned up markdown styles from settings.json."
+    M[UNINST_SUCCESS]="✔ Antigravity IDE RTL uninstalled cleanly."
+    M[UNINST_RESTART]="Please restart Antigravity IDE."
+    M[STATUS_HEADER]="=== Antigravity IDE RTL Status ==="
+    M[STATUS_APP_DIR]="  App Directory:    "
+    M[STATUS_USER]="  Target User:      "
+    M[STATUS_CONFIG]="  User Config:      "
+    M[STATUS_WB_CSS]="  Workbench CSS:    "
+    M[STATUS_WB_JS]="  Workbench JS:     "
+    M[STATUS_HTML]="  workbench.html:   "
+    M[STATUS_CHK]="  Checksum Bypass:  "
+    M[STATUS_MD]="  Markdown Preview: "
+    M[STATUS_INSTALLED]="Installed"
+    M[STATUS_MISSING]="Missing"
+    M[STATUS_PATCHED]="Patched (CSS & JS linked)"
+    M[STATUS_PARTIAL]="Partially Patched (CSS only)"
+    M[STATUS_NOT_PATCHED]="Not Patched"
+    M[STATUS_BYPASS_ACTIVE]="Active (No corrupt warning)"
+    M[STATUS_BYPASS_PENDING]="Pending / Not Bypassed"
+    M[STATUS_CONFIGURED]="Configured"
+    M[STATUS_NOT_CONFIGURED]="Not Configured"
+fi
+
 # Resolve real user and home directory (handles execution directly or through sudo)
 REAL_USER="${SUDO_USER:-$USER}"
 REAL_HOME=$(getent passwd "$REAL_USER" 2>/dev/null | cut -d: -f6 || echo "$HOME")
@@ -29,9 +204,43 @@ if [[ -z "$REAL_HOME" || ! -d "$REAL_HOME" ]]; then
 fi
 
 # Locate Antigravity IDE application directory
+APP_DIR=""
+DETECTED_VIA=""
+
 find_app_dir() {
+    # Priority 1: Environment variable ANTIGRAVITY_APP_DIR
+    if [[ -n "${ANTIGRAVITY_APP_DIR:-}" && -d "$ANTIGRAVITY_APP_DIR" && -f "$ANTIGRAVITY_APP_DIR/package.json" ]]; then
+        APP_DIR="$ANTIGRAVITY_APP_DIR"
+        DETECTED_VIA="Environment variable ANTIGRAVITY_APP_DIR"
+        return 0
+    fi
+
+    # Priority 2: Locate via 'antigravity-ide' CLI in PATH
+    if command -v antigravity-ide &>/dev/null; then
+        local cli_bin
+        cli_bin=$(command -v antigravity-ide)
+        # Resolve symlink if applicable
+        if command -v readlink &>/dev/null; then
+            local resolved_bin
+            resolved_bin=$(readlink -f "$cli_bin" 2>/dev/null || echo "$cli_bin")
+            if [[ -n "$resolved_bin" ]]; then
+                cli_bin="$resolved_bin"
+            fi
+        fi
+
+        local cli_dir candidate_app
+        cli_dir="$(dirname "$cli_bin")"
+        candidate_app="$(dirname "$cli_dir")/resources/app"
+
+        if [[ -d "$candidate_app" && -f "$candidate_app/package.json" ]]; then
+            APP_DIR="$candidate_app"
+            DETECTED_VIA="PATH command 'antigravity-ide' ($cli_bin)"
+            return 0
+        fi
+    fi
+
+    # Priority 3: Standard fallback paths
     local candidates=(
-        "${ANTIGRAVITY_APP_DIR:-}"
         "/opt/antigravity-ide/resources/app"
         "/usr/lib/antigravity-ide/resources/app"
         "/usr/share/antigravity-ide/resources/app"
@@ -41,24 +250,49 @@ find_app_dir() {
 
     for dir in "${candidates[@]}"; do
         if [[ -n "$dir" && -d "$dir" && -f "$dir/package.json" ]]; then
-            echo "$dir"
+            APP_DIR="$dir"
+            DETECTED_VIA="Standard location ($dir)"
             return 0
         fi
     done
     return 1
 }
 
-APP_DIR=$(find_app_dir || true)
-
-if [[ -z "$APP_DIR" ]]; then
-    echo -e "${RED}[✗] Error: Antigravity IDE resources/app directory not found.${NC}"
-    echo -e "${YELLOW}    Please ensure Antigravity IDE is installed or set ANTIGRAVITY_APP_DIR.${NC}"
+if ! find_app_dir; then
+    echo -e "${RED}${M[ERR_APP_DIR]}${NC}"
+    echo -e "${YELLOW}${M[ERR_PATH_DET]}${NC}"
+    echo -e "${CYAN}${M[TRB_TITLE]}${NC}"
+    echo -e "${M[TRB_STEP1]}"
+    echo -e "${M[TRB_STEP2]}"
+    echo -e "${M[TRB_STEP3]}"
+    echo -e "     ${YELLOW}export ANTIGRAVITY_APP_DIR=\"/path/to/Antigravity IDE/resources/app\"${NC}"
+    echo -e "     ${YELLOW}./setup.sh install${NC}\n"
     exit 1
 fi
 
 WORKBENCH_DIR="$APP_DIR/out/vs/workbench"
 HTML_FILE="$APP_DIR/out/vs/code/electron-browser/workbench/workbench.html"
 PRODUCT_JSON="$APP_DIR/product.json"
+
+# Integrity & Health Check of required files
+missing_files=()
+[[ -f "$APP_DIR/package.json" ]] || missing_files+=("package.json")
+[[ -d "$WORKBENCH_DIR" ]] || missing_files+=("out/vs/workbench")
+[[ -f "$HTML_FILE" ]] || missing_files+=("out/vs/code/electron-browser/workbench/workbench.html")
+[[ -f "$PRODUCT_JSON" ]] || missing_files+=("product.json")
+
+if [[ ${#missing_files[@]} -gt 0 ]]; then
+    echo -e "${RED}${M[ERR_MISSING]}${APP_DIR}${NC}"
+    for mf in "${missing_files[@]}"; do
+        echo -e "${YELLOW}${M[MISSING_ITEM]}$mf${NC}"
+    done
+    echo -e "\n${CYAN}Troubleshooting:${NC} ${M[TRB_CORRUPT]}"
+    exit 1
+fi
+
+echo -e "${GREEN}${M[SUCCESS_DETECT]}${DETECTED_VIA}${NC}"
+echo -e "${M[APP_DIR_LBL]}${CYAN}${APP_DIR}${NC}"
+echo -e "${GREEN}${M[CORE_VERIFIED]}${NC}"
 USER_CONFIG_DIR="$REAL_HOME/.config/Antigravity IDE/User"
 MARKDOWN_CSS="$USER_CONFIG_DIR/markdown-rtl.css"
 SETTINGS_JSON="$USER_CONFIG_DIR/settings.json"
@@ -67,9 +301,9 @@ SETTINGS_JSON="$USER_CONFIG_DIR/settings.json"
 ensure_root() {
     if [[ ! -w "$WORKBENCH_DIR" || ! -w "$HTML_FILE" || ! -w "$PRODUCT_JSON" ]]; then
         if [[ $EUID -ne 0 ]]; then
-            echo -e "${YELLOW}[!] Administrative privileges required to modify Antigravity IDE files.${NC}"
-            echo -e "${CYAN}[*] Elevating privileges via sudo...${NC}"
-            exec sudo -E bash "$0" "$@"
+            echo -e "${YELLOW}${M[ADMIN_REQ]}${NC}"
+            echo -e "${CYAN}${M[ADMIN_ELEVATING]}${NC}"
+            exec sudo -E bash "$0" "--lang=$LANG_CHOICE" "${FILTERED_ARGS[@]}"
         fi
     fi
 }
@@ -79,25 +313,25 @@ check_fonts() {
         if ! fc-list : family | grep -iq "vazirmatn"; then
             local repo_fonts="$REAL_HOME/.local/share/chezmoi/private_dot_local/private_share/fonts"
             if compgen -G "$repo_fonts/Vazirmatn-*.ttf" > /dev/null 2>&1; then
-                echo -e "${CYAN}[*] Installing Vazirmatn from local repository...${NC}"
+                echo -e "${CYAN}${M[FONT_LOCAL]}${NC}"
                 mkdir -p "$REAL_HOME/.local/share/fonts"
                 cp -f "$repo_fonts"/Vazirmatn-*.ttf "$REAL_HOME/.local/share/fonts/"
                 fc-cache -f "$REAL_HOME/.local/share/fonts" &>/dev/null || true
-                echo -e "${GREEN}[✓] Vazirmatn font installed successfully.${NC}"
+                echo -e "${GREEN}${M[FONT_LOCAL_OK]}${NC}"
             else
-                echo -e "${YELLOW}[!] Warning: Vazirmatn font not detected on your system.${NC}"
-                echo -e "${CYAN}    To install on Arch/Omarchy:${NC} yay -S --needed ttf-vazirmatn"
-                echo -e "${CYAN}    To install on Debian/Ubuntu:${NC} sudo apt install fonts-vazirmatn"
+                echo -e "${YELLOW}${M[FONT_WARN]}${NC}"
+                echo -e "${CYAN}${M[FONT_ARCH]}${NC}yay -S --needed ttf-vazirmatn"
+                echo -e "${CYAN}${M[FONT_DEB]}${NC}sudo apt install fonts-vazirmatn"
             fi
         else
-            echo -e "${GREEN}[✓] Vazirmatn font detected.${NC}"
+            echo -e "${GREEN}${M[FONT_DETECTED]}${NC}"
         fi
     fi
 }
 
 write_css_file() {
     local target="$WORKBENCH_DIR/antigravity-chat-rtl.css"
-    echo -e "${CYAN}[*] Writing workbench CSS -> $target${NC}"
+    echo -e "${CYAN}${M[WRITE_CSS]}$target${NC}"
 
     if [[ -f "$SCRIPT_DIR/styles/antigravity-chat-rtl.css" ]]; then
         cp -f "$SCRIPT_DIR/styles/antigravity-chat-rtl.css" "$target"
@@ -289,34 +523,34 @@ EOF
 }
 
 patch_workbench_html() {
-    echo -e "${CYAN}[*] Patching $HTML_FILE${NC}"
+    echo -e "${CYAN}${M[PATCH_HTML]}$HTML_FILE${NC}"
     if [[ ! -f "$HTML_FILE.bak" ]]; then
         cp "$HTML_FILE" "$HTML_FILE.bak"
-        echo -e "${BLUE}[i] Created backup: $HTML_FILE.bak${NC}"
+        echo -e "${BLUE}${M[BACKUP_CREATED]}$HTML_FILE.bak${NC}"
     fi
 
     # Inject CSS link before </head>
     if ! grep -q "antigravity-chat-rtl.css" "$HTML_FILE"; then
         sed -i '/<\/head>/i \	<link rel="stylesheet" href="../../../workbench/antigravity-chat-rtl.css">' "$HTML_FILE"
-        echo -e "${GREEN}[✓] Injected antigravity-chat-rtl.css into workbench.html${NC}"
+        echo -e "${GREEN}${M[INJECT_CSS]}${NC}"
     else
-        echo -e "${YELLOW}[i] CSS link already present in workbench.html${NC}"
+        echo -e "${YELLOW}${M[CSS_EXISTS]}${NC}"
     fi
 
     # Inject JS script before </html>
     if ! grep -q "antigravity-chat-rtl.js" "$HTML_FILE"; then
         sed -i '/<\/html>/i \	<script src="../../../workbench/antigravity-chat-rtl.js"></script>' "$HTML_FILE"
-        echo -e "${GREEN}[✓] Injected antigravity-chat-rtl.js into workbench.html${NC}"
+        echo -e "${GREEN}${M[INJECT_JS]}${NC}"
     else
-        echo -e "${YELLOW}[i] JS script already present in workbench.html${NC}"
+        echo -e "${YELLOW}${M[JS_EXISTS]}${NC}"
     fi
 }
 
 patch_product_json() {
-    echo -e "${CYAN}[*] Removing checksum verification for workbench.html in $PRODUCT_JSON${NC}"
+    echo -e "${CYAN}${M[REMOVE_CHK]}$PRODUCT_JSON${NC}"
     if [[ ! -f "$PRODUCT_JSON.bak" ]]; then
         cp "$PRODUCT_JSON" "$PRODUCT_JSON.bak"
-        echo -e "${BLUE}[i] Created backup: $PRODUCT_JSON.bak${NC}"
+        echo -e "${BLUE}${M[BACKUP_CREATED]}$PRODUCT_JSON.bak${NC}"
     fi
 
     python3 -c "
@@ -336,11 +570,11 @@ if target_key in checksums:
 else:
     print('ALREADY_REMOVED')
 " 2>/dev/null || true
-    echo -e "${GREEN}[✓] Checksum bypass applied (prevents unsupported / corrupt warnings).${NC}"
+    echo -e "${GREEN}${M[CHK_BYPASSED]}${NC}"
 }
 
 setup_markdown_preview() {
-    echo -e "${CYAN}[*] Configuring user Markdown preview (Ctrl+Shift+V)...${NC}"
+    echo -e "${CYAN}${M[CFG_MD]}${NC}"
     mkdir -p "$USER_CONFIG_DIR"
 
     if [[ -f "$SCRIPT_DIR/styles/markdown-rtl.css" ]]; then
@@ -403,12 +637,12 @@ with open(settings_path, 'w', encoding='utf-8') as f:
         chown -R "$REAL_USER:$(id -gn "$REAL_USER")" "$USER_CONFIG_DIR" 2>/dev/null || true
     fi
 
-    echo -e "${GREEN}[✓] Markdown RTL preview styles & settings configured.${NC}"
+    echo -e "${GREEN}${M[MD_CONFIGURED]}${NC}"
 }
 
 do_install() {
     ensure_root "$@"
-    echo -e "${BOLD}${BLUE}=== Installing Antigravity IDE RTL & Vazirmatn Font ===${NC}"
+    echo -e "${BOLD}${BLUE}${M[INST_HEADER]}${NC}"
     check_fonts
     write_css_file
     write_js_file
@@ -416,49 +650,49 @@ do_install() {
     patch_product_json
     setup_markdown_preview
     echo ""
-    echo -e "${BOLD}${GREEN}✔ Antigravity IDE RTL successfully installed!${NC}"
-    echo -e "${CYAN}Please restart Antigravity IDE to apply all visual changes.${NC}"
+    echo -e "${BOLD}${GREEN}${M[INST_SUCCESS]}${NC}"
+    echo -e "${CYAN}${M[INST_RESTART]}${NC}"
 }
 
 do_uninstall() {
     ensure_root "$@"
-    echo -e "${BOLD}${YELLOW}=== Reverting Antigravity IDE RTL Setup ===${NC}"
+    echo -e "${BOLD}${YELLOW}${M[UNINST_HEADER]}${NC}"
 
     # Restore workbench.html
     if [[ -f "$HTML_FILE" ]]; then
         if [[ -f "$HTML_FILE.bak" ]]; then
             cp -f "$HTML_FILE.bak" "$HTML_FILE"
             rm -f "$HTML_FILE.bak"
-            echo -e "${GREEN}[✓] Restored workbench.html from backup.${NC}"
+            echo -e "${GREEN}${M[RESTORE_HTML]}${NC}"
         else
             sed -i '/antigravity-chat-rtl\.css/d' "$HTML_FILE"
             sed -i '/antigravity-chat-rtl\.js/d' "$HTML_FILE"
-            echo -e "${GREEN}[✓] Removed RTL tags from workbench.html.${NC}"
+            echo -e "${GREEN}${M[REMOVE_TAGS]}${NC}"
         fi
     fi
 
     # Remove CSS and JS
     if [[ -f "$WORKBENCH_DIR/antigravity-chat-rtl.css" ]]; then
         rm -f "$WORKBENCH_DIR/antigravity-chat-rtl.css"
-        echo -e "${GREEN}[✓] Removed antigravity-chat-rtl.css.${NC}"
+        echo -e "${GREEN}${M[REMOVE_CSS]}${NC}"
     fi
 
     if [[ -f "$WORKBENCH_DIR/antigravity-chat-rtl.js" ]]; then
         rm -f "$WORKBENCH_DIR/antigravity-chat-rtl.js"
-        echo -e "${GREEN}[✓] Removed antigravity-chat-rtl.js.${NC}"
+        echo -e "${GREEN}${M[REMOVE_JS]}${NC}"
     fi
 
     # Restore product.json
     if [[ -f "$PRODUCT_JSON.bak" ]]; then
         cp -f "$PRODUCT_JSON.bak" "$PRODUCT_JSON"
         rm -f "$PRODUCT_JSON.bak"
-        echo -e "${GREEN}[✓] Restored product.json from backup.${NC}"
+        echo -e "${GREEN}${M[RESTORE_PROD]}${NC}"
     fi
 
     # Clean up markdown css & settings
     if [[ -f "$MARKDOWN_CSS" ]]; then
         rm -f "$MARKDOWN_CSS"
-        echo -e "${GREEN}[✓] Removed markdown-rtl.css.${NC}"
+        echo -e "${GREEN}${M[REMOVE_MD_CSS]}${NC}"
     fi
 
     if [[ -f "$SETTINGS_JSON" ]]; then
@@ -479,39 +713,39 @@ if os.path.exists(settings_path):
     except Exception:
         pass
 " 2>/dev/null || true
-        echo -e "${GREEN}[✓] Cleaned up markdown styles from settings.json.${NC}"
+        echo -e "${GREEN}${M[CLEAN_MD_SETTING]}${NC}"
     fi
 
     echo ""
-    echo -e "${BOLD}${GREEN}✔ Antigravity IDE RTL uninstalled cleanly.${NC}"
-    echo -e "${CYAN}Please restart Antigravity IDE.${NC}"
+    echo -e "${BOLD}${GREEN}${M[UNINST_SUCCESS]}${NC}"
+    echo -e "${CYAN}${M[UNINST_RESTART]}${NC}"
 }
 
 do_status() {
-    echo -e "${BOLD}=== Antigravity IDE RTL Status ===${NC}"
-    echo -e "  App Directory:    ${CYAN}$APP_DIR${NC}"
-    echo -e "  Target User:      ${CYAN}$REAL_USER${NC}"
-    echo -e "  User Config:      ${CYAN}$USER_CONFIG_DIR${NC}"
+    echo -e "${BOLD}${M[STATUS_HEADER]}${NC}"
+    echo -e "${M[STATUS_APP_DIR]}${CYAN}$APP_DIR${NC}"
+    echo -e "${M[STATUS_USER]}${CYAN}$REAL_USER${NC}"
+    echo -e "${M[STATUS_CONFIG]}${CYAN}$USER_CONFIG_DIR${NC}"
     echo ""
 
     if [[ -f "$WORKBENCH_DIR/antigravity-chat-rtl.css" ]]; then
-        echo -e "  Workbench CSS:    ${GREEN}Installed${NC}"
+        echo -e "${M[STATUS_WB_CSS]}${GREEN}${M[STATUS_INSTALLED]}${NC}"
     else
-        echo -e "  Workbench CSS:    ${RED}Missing${NC}"
+        echo -e "${M[STATUS_WB_CSS]}${RED}${M[STATUS_MISSING]}${NC}"
     fi
 
     if [[ -f "$WORKBENCH_DIR/antigravity-chat-rtl.js" ]]; then
-        echo -e "  Workbench JS:     ${GREEN}Installed${NC}"
+        echo -e "${M[STATUS_WB_JS]}${GREEN}${M[STATUS_INSTALLED]}${NC}"
     else
-        echo -e "  Workbench JS:     ${RED}Missing${NC}"
+        echo -e "${M[STATUS_WB_JS]}${RED}${M[STATUS_MISSING]}${NC}"
     fi
 
     if grep -q "antigravity-chat-rtl.css" "$HTML_FILE" 2>/dev/null && grep -q "antigravity-chat-rtl.js" "$HTML_FILE" 2>/dev/null; then
-        echo -e "  workbench.html:   ${GREEN}Patched (CSS & JS linked)${NC}"
+        echo -e "${M[STATUS_HTML]}${GREEN}${M[STATUS_PATCHED]}${NC}"
     elif grep -q "antigravity-chat-rtl.css" "$HTML_FILE" 2>/dev/null; then
-        echo -e "  workbench.html:   ${YELLOW}Partially Patched (CSS only)${NC}"
+        echo -e "${M[STATUS_HTML]}${YELLOW}${M[STATUS_PARTIAL]}${NC}"
     else
-        echo -e "  workbench.html:   ${RED}Not Patched${NC}"
+        echo -e "${M[STATUS_HTML]}${RED}${M[STATUS_NOT_PATCHED]}${NC}"
     fi
 
     local chk_status
@@ -529,40 +763,50 @@ except:
 " 2>/dev/null || echo "error")
 
     if [[ "$chk_status" == "bypassed" ]]; then
-        echo -e "  Checksum Bypass:  ${GREEN}Active (No corrupt warning)${NC}"
+        echo -e "${M[STATUS_CHK]}${GREEN}${M[STATUS_BYPASS_ACTIVE]}${NC}"
     else
-        echo -e "  Checksum Bypass:  ${YELLOW}Pending / Not Bypassed${NC}"
+        echo -e "${M[STATUS_CHK]}${YELLOW}${M[STATUS_BYPASS_PENDING]}${NC}"
     fi
 
     if [[ -f "$MARKDOWN_CSS" ]]; then
-        echo -e "  Markdown Preview: ${GREEN}Configured${NC}"
+        echo -e "${M[STATUS_MD]}${GREEN}${M[STATUS_CONFIGURED]}${NC}"
     else
-        echo -e "  Markdown Preview: ${YELLOW}Not Configured${NC}"
+        echo -e "${M[STATUS_MD]}${YELLOW}${M[STATUS_NOT_CONFIGURED]}${NC}"
     fi
 }
 
-case "${1:-install}" in
+cmd="${FILTERED_ARGS[0]:-install}"
+rest_args=()
+if [[ ${#FILTERED_ARGS[@]} -gt 1 ]]; then
+    rest_args=("${FILTERED_ARGS[@]:1}")
+fi
+
+case "$cmd" in
     install|setup)
-        do_install "$@"
+        do_install "${rest_args[@]}"
         ;;
     uninstall|remove|restore)
-        do_uninstall "$@"
+        do_uninstall "${rest_args[@]}"
         ;;
     status)
         do_status
         ;;
     help|--help|-h)
-        echo "Usage: $(basename "$0") [install|uninstall|status|help]"
+        echo "Usage: $(basename "$0") [install|uninstall|status|help] [--lang=fa|--lang=en]"
         echo ""
         echo "Commands:"
         echo "  install    Install RTL CSS, JS, workbench patches and Vazirmatn font styling (default)"
         echo "  uninstall  Revert all patches and restore original workbench files"
         echo "  status     Check current installation and patch status"
         echo "  help       Show this help message"
+        echo ""
+        echo "Options:"
+        echo "  --lang=fa  Skip prompt and run in Persian"
+        echo "  --lang=en  Skip prompt and run in English"
         ;;
     *)
-        echo -e "${RED}Unknown command: $1${NC}"
-        echo "Usage: $(basename "$0") [install|uninstall|status|help]"
+        echo -e "${RED}Unknown command: $cmd${NC}"
+        echo "Usage: $(basename "$0") [install|uninstall|status|help] [--lang=fa|--lang=en]"
         exit 1
         ;;
 esac

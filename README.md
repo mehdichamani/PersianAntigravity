@@ -1,143 +1,178 @@
-# Antigravity RTL & Persian/Arabic Typography 🇮🇷 🇦🇪
+# پشتیبانی راست‌به‌چپ (RTL) و فونت وزیرمتن در Antigravity IDE 🇮🇷 🇦🇪
 
-> **Native, Extension-Free Right-to-Left (RTL) & Vazirmatn Font Support Exclusively Crafted for Antigravity IDE.**
+<div dir="rtl">
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-informational.svg)](#)
-[![Target](https://img.shields.io/badge/Target-Antigravity%20IDE-blueviolet.svg)](#)
+> **پشتیبانی بومی، پایدار و بدون نیاز به افزونه از زبان‌های راست‌به‌چپ (فارسی و عربی) و فونت زیبای وزیرمتن در محیط توسعه Antigravity IDE.**
 
----
+<p align="center">
+  <a href="README.md"><b>🇮🇷 مستندات فارسی</b></a> •
+  <a href="README.en.md"><b>English Documentation 🇬🇧</b></a>
+</p>
 
-## ⚡ Highlights (ویژگی‌های کلیدی)
-
-- 🚫 **Zero Extensions Required:** Operates natively without bloated or incompatible VS Code extensions.
-- 🔄 **Real-Time Dynamic RTL Detection:** Built-in lightweight `MutationObserver` detects Persian, Arabic, and Hebrew characters in real-time as the AI agent streams responses.
-- 🎨 **Beautiful Vazirmatn Typography:** Polished typography across the **Chat Side Panel** (`.antigravity-agent-side-panel`), **Implementation Plans**, **Artifacts**, and **Walkthroughs** (`.jetski-custom-editor-pane`).
-- 💻 **Strict LTR Code Blocks:** Code blocks (`pre`, `code`, `.interactive-result-code-block`) remain strictly LTR with monospaced font (`JetBrainsMono Nerd Font`), ensuring uncompromised readability.
-- 🛡️ **No "Corrupted / Unsupported" Warnings:** Cleanly strips the workbench hash from `product.json` checksums to prevent annoying warning banners.
-- 📝 **Markdown Preview RTL:** Preconfigures built-in Markdown preview (`Ctrl+Shift+V`) with RTL direction and Vazirmatn font.
-- 🔄 **Clean Rollback & Status Check:** Safely creates `.bak` backups before modifying files; uninstall restores the original state with one command.
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="مجوز MIT"></a>
+  <a href="#"><img src="https://img.shields.io/badge/سیستم‌عامل-لینوکس%20%7C%20ویندوز%20%7C%20مک-informational.svg" alt="پلتفرم‌ها"></a>
+  <a href="#"><img src="https://img.shields.io/badge/پشتیبانی-Antigravity%20IDE-blueviolet.svg" alt="محیط هدف"></a>
+  <a href="#"><img src="https://img.shields.io/badge/فونت-وزیرمتن-success.svg" alt="فونت وزیرمتن"></a>
+</p>
 
 ---
 
-## 🚀 Quick Start (نصب سریع تک‌خطی)
+## 🎯 چرا Antigravity RTL؟
 
-### Linux & macOS
+محیط توسعه **Google Antigravity IDE** به طور پیش‌فرض متون زبان‌های راست‌به‌چپ (مانند فارسی و عربی) را در پنل چت هوش مصنوعی (`Chat Side Panel`) و صفحات برنامه‌ریزی معماری (`Implementation Plans` و `Artifacts`) به صورت چپ‌چین و نامنظم نمایش می‌دهد. افزونه‌های معمول VS Code نیز یا روی Antigravity IDE کار نمی‌کنند یا سرعت محیط را کاهش داده و خطوط کد را به اشتباه راست‌چین می‌کنند.
 
-Run the installer via `curl`:
+این پروژه یک راهکار بومی، فوق‌العاده سبک و مهندسی‌شده ارائه می‌دهد که:
+- به هیچ افزونه جانبی نیاز ندارد.
+- جهت متون فارسی/عربی را به محض تایپ یا استریم شدن پاسخ هوش مصنوعی در همان لحظه تشخیص می‌دهد.
+- ساختار و جهت بلوک‌های کد (`LTR`)، جداول و متون انگلیسی را کاملاً دست‌نخورده نگه می‌دارد.
+
+---
+
+## ✨ ویژگی‌های برجسته
+
+- 🚫 **بی‌نیاز از هرگونه اکستنشن:** تزریق مستقیم و تمیز در سطح هسته Workbench، بدون سربار پردازشی یا ناسازگاری افزونه‌ها.
+- ⚡ **تشخیص لحظه‌ای و پویا (Dynamic RTL):** استفاده از یک `MutationObserver` سبک و بهینه‌سازی‌شده برای تشخیص متون فارسی، عربی و عبری به صورت Real-Time هنگام استریم پاسخ‌های دستیار هوشمند.
+- 🎨 **تایپوگرافی زیبا با فونت وزیرمتن:** اعمال فونت چشم‌نواز Vazirmatn با ارتفاع خط استاندارد (`line-height: 1.8`) در پنل چت و آرتیفکت‌های ویرایشگر (`.jetski-custom-editor-pane`).
+- 💻 **حفظ جهت چپ‌به‌راست برای کدها:** تمام بلوک‌های کد (`pre`, `code`, `.interactive-result-code-block`) در جهت دقیق `LTR` با فونت‌های مونواسپیس استاندارد (`JetBrainsMono Nerd Font` و غیره) بدون تغییر جهت باقی می‌مانند.
+- 🛡️ **بدون پیام هشدار خرابی نسخه (Checksum Patch):** بازنویسی خودکار و تمیز هش فایل‌ها در `product.json` به طوری که اخطار مزاحم *"Your installation is corrupt"* هرگز نمایش داده نشود.
+- 📝 **پیش‌نمایش مارک‌داون راست‌چین:** تنظیم خودکار استایل‌های پیش‌نمایش داخلی Markdown (`Ctrl+Shift+V`) با فونت وزیرمتن و جهت راست‌چین.
+- 🔄 **نصب ایمن با قابلیت بازگردانی (Rollback):** ایجاد نسخه پشتیبان (`.bak`) از تمام فایل‌های سیستمی قبل از هرگونه تغییر؛ قابلیت حذف کامل و بازگشت به حالت اولیه تنها با یک دستور.
+
+---
+
+## 🚀 راهنمای نصب سریع (One-Liner Install)
+
+تنها با اجرای یک دستور در ترمینال، تمامی فایل‌ها به طور خودکار دریافت، تنظیم و اعمال می‌شوند:
+
+### 🐧 لینوکس و مک (Linux & macOS)
+
+دستور زیر را در ترمینال (Bash/Zsh) اجرا کنید:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/mehdichamani/antigravity-rtl/main/setup.sh | bash
 ```
 
-### Windows (PowerShell 7+)
+### 🪟 ویندوز (Windows PowerShell)
 
-Run the installer in PowerShell:
+پنجره PowerShell (ترجیحاً نسخه 7 یا بالاتر) را باز کرده و دستور زیر را وارد کنید:
 
 ```powershell
 irm https://raw.githubusercontent.com/mehdichamani/antigravity-rtl/main/setup.ps1 | iex
 ```
 
-*After installation, restart Antigravity IDE to apply visual changes.*
+> **نکته:** پس از اتمام نصب، محیط **Antigravity IDE** را یک‌بار ببندید و مجدداً باز کنید تا تغییرات بصری اعمال شوند.
 
 ---
 
-## 💻 Local Clone & Manual Usage (استفاده از سورس)
+## 💻 اجرای دستی از طریق سورس (Local Clone)
 
-If you prefer to clone the repository locally:
+در صورت تمایل به اجرای محلی یا بررسی کدها قبل از نصب:
 
 ```bash
 git clone https://github.com/mehdichamani/antigravity-rtl.git ~/projects/antigravity-rtl
 cd ~/projects/antigravity-rtl
 ```
 
-### Linux / macOS (`setup.sh`)
+### در لینوکس و مک (`setup.sh`)
 
 ```bash
-# Check current installation status
+# بررسی وضعیت فعلی نصب
 ./setup.sh status
 
-# Install / Apply patches
+# اجرای فرآیند نصب و اعمال پچ‌ها
 ./setup.sh install
 
-# Uninstall / Restore original state
+# حذف کامل پچ‌ها و بازگردانی وضعیت به نسخه اصلی
 ./setup.sh uninstall
 ```
 
-> **Note on Permissions:** Core Antigravity IDE files on Linux reside in `/opt/antigravity-ide/`. The script automatically prompts for `sudo` elevation only when modifying system files.
+> 💡 *در لینوکس، اسکریپت تنها برای ذخیره فایل‌ها در دایرکتوری `/opt/antigravity-ide/` از شما دسترسی `sudo` خواهد خواست.*
 
-### Windows (`setup.ps1`)
+### در ویندوز (`setup.ps1`)
 
 ```powershell
-# Check current status
+# بررسی وضعیت فعلی
 pwsh -File ./setup.ps1 -Status
 
-# Install / Apply patches
+# نصب و اعمال پچ‌ها
 pwsh -File ./setup.ps1 -Install
 
-# Uninstall / Revert
+# حذف و بازگردانی فایل‌های اصلی
 pwsh -File ./setup.ps1 -Uninstall
 ```
 
 ---
 
-## 📁 Project Structure (ساختار پروژه)
+## 📁 ساختار مخزن
 
-```
+```text
 antigravity-rtl/
 ├── .gitignore
-├── LICENSE                          # MIT License
-├── README.md                        # Documentation & Guides
-├── setup.sh                         # Linux/macOS installation script
-├── setup.ps1                        # Windows PowerShell installation script
+├── LICENSE                          # مجوز نرم‌افزار (MIT)
+├── README.md                        # مستندات فارسی پروژه
+├── README.en.md                     # مستندات انگلیسی پروژه
+├── setup.sh                         # اسکریپت نصب و مدیریت لینوکس و مک
+├── setup.ps1                        # اسکریپت نصب و مدیریت ویندوز (PowerShell)
 ├── styles/
-│   ├── antigravity-chat-rtl.css     # Workbench chat & artifact stylesheet
-│   └── markdown-rtl.css             # User Markdown preview stylesheet
+│   ├── antigravity-chat-rtl.css     # استایل‌های شیک پنل چت و صفحات آرتیفکت
+│   └── markdown-rtl.css             # استایل‌های پیش‌نمایش فایل‌های Markdown
 └── scripts/
-    └── antigravity-chat-rtl.js      # MutationObserver real-time RTL script
+    └── antigravity-chat-rtl.js      # اسکریپت پویای تشخیص کاراکترهای راست‌به‌چپ
 ```
 
 ---
 
-## ⚙️ How It Works (معماری و نحوه عملکرد)
+## ⚙️ سازوکار فنی (Under the Hood)
 
-1. **Workbench Injection:** The installer injects links to `antigravity-chat-rtl.css` and `antigravity-chat-rtl.js` directly into `out/vs/code/electron-browser/workbench/workbench.html`.
-2. **Dynamic Mutation Observer:** `antigravity-chat-rtl.js` listens to DOM subtree updates. Whenever text matches Persian/Arabic Unicode ranges (`[\u0600-\u06FF...]`), it applies the `.antigravity-is-rtl` class.
-3. **Typography & Spacing:** `antigravity-chat-rtl.css` increases line height (`line-height: 1.8`), refines list paddings for RTL numbering, and forces code blocks and tables to maintain LTR formatting.
-4. **Checksum Bypass:** Electron-based VS Code applications verify file integrity against hashes in `product.json`. The script safely removes `workbench.html` from `checksums`, completely silencing the *"Your installation is corrupt"* warning.
-5. **Markdown Preview:** Injects `markdown-rtl.css` into `~/.config/Antigravity IDE/User/settings.json` under `markdown.styles`.
+1. **تزریق به Workbench:** اسکریپت‌های نصب فایل‌های `antigravity-chat-rtl.css` و `antigravity-chat-rtl.js` را به فایل اصلی `out/vs/code/electron-browser/workbench/workbench.html` اضافه می‌کنند.
+2. **رصد تغییرات DOM با MutationObserver:** اسکریپت جاوااسکریپت تغییرات المان‌های پنل چت را زیر نظر می‌گیرد. هر پاراگراف یا متنی که حاوی کاراکترهای یونیکد فارسی یا عربی (`[\u0600-\u06FF...]`) باشد، کلاس `.antigravity-is-rtl` را دریافت می‌کند.
+3. **تفکیک هوشمند کدها:** استایل‌های CSS به صورت صریح بلوک‌های کدهای درون‌خطی و چندخطی (`code` و `pre`) را از تغییر جهت مستثنی کرده و جهت `ltr` آن‌ها را تضمین می‌کنند.
+4. **حذف اخطار چک‌سام:** محیط VS Code و فورک‌های الکترونی آن به صورت پیش‌فرض کدهای دستکاری‌شده را با مقایسه هش در `product.json` شناسایی کرده و نوار هشدار نمایش می‌دهند. اسکریپت نصب با حذف امن کلید هش `workbench.html`، از بروز هرگونه اخطار جلوگیری به عمل می‌آورد.
+5. **یکپارچه‌سازی مارک‌داون:** فایل `markdown-rtl.css` به تنظیمات کاربری `settings.json` در کلید `markdown.styles` معرفی می‌شود تا پیش‌نمایش فایل‌های مستندات نیز راست‌چین شوند.
 
 ---
 
-## 🔤 Prerequisites: Vazirmatn Font (پیش‌نیاز فونت وزیرمتن)
+## 🔤 پیش‌نیاز: نصب فونت وزیرمتن
 
-For the best experience, ensure the **Vazirmatn** font is installed on your operating system:
+برای داشتن بهترین تجربه بصری، پیشنهاد می‌شود فونت محبوب **وزیرمتن (Vazirmatn)** را روی سیستم خود نصب داشته باشید:
 
-- **Arch / Omarchy Linux:**
+- **آرچ لینوکس (Arch / Omarchy Linux):**
   ```bash
   yay -S --needed ttf-vazirmatn
   ```
-- **Debian / Ubuntu:**
+- **اوبونتو و دبیان (Ubuntu / Debian):**
   ```bash
   sudo apt install fonts-vazirmatn
   ```
-- **Windows:** Download and install from [Google Fonts - Vazirmatn](https://fonts.google.com/specimen/Vazirmatn) or GitHub releases.
+- **ویندوز و مک (Windows & macOS):**
+  دانلود و نصب مستقیم از صفحه [Google Fonts - Vazirmatn](https://fonts.google.com/specimen/Vazirmatn) یا صفحه گیت‌هاب رسمی صابر راستی‌کردار.
 
 ---
 
-## 🇮🇷 راهنمای فارسی (Persian Documentation)
+## ❓ پرسش‌های متداول (FAQ)
 
-محیط توسعه **Antigravity IDE** به طور پیش‌فرض از متون راست‌به‌چپ (فارسی، عربی و عبری) در پنل‌های چت و اسناد برنامه‌ریزی پشتیبانی بهینه‌ای ندارد. این پروژه یک راهکار بومی، بسیار سبک و بدون نیاز به نصب هرگونه اکستنشن برای Antigravity IDE ارائه می‌دهد:
+<details>
+<summary><b>آیا با آپدیت شدن Antigravity IDE این تغییرات پاک می‌شوند؟</b></summary>
+بله؛ هر بار که نسخه جدیدی از Antigravity IDE منتشر و نصب شود، فایل‌های Workbench به حالت پیش‌فرض بازمی‌گردند. در این حالت کافی است یک‌بار دیگر دستور نصب سریع تک‌خطی را اجرا کنید.
+</details>
 
-1. **راست‌چین‌سازی هوشمند (RTL):** بدون دستکاری یا به هم ریختن جهت بلوک‌های کد و آیکون‌ها، صرفاً متون فارسی و عربی را در لحظه تشخیص داده و راست‌چین می‌کند.
-2. **فونت وزیرمتن:** اعمال ظاهر یکپارچه و خوانا با فونت محبوب Vazirmatn در پنل چت و خروجی پلن‌ها.
-3. **حذف هشدار نامعتبر بودن نسخه:** با اصلاح امن کلید چک‌سام در `product.json`، مانع از نمایش اخطار *Unsupported / Corrupt Installation* می‌شود.
-4. **پیش‌نمایش مارک‌داون:** استایل‌های راست‌چین را برای پیش‌نمایش داخلی فایل‌های Markdown (`Ctrl+Shift+V`) فعال می‌سازد.
+<details>
+<summary><b>آیا این اسکریپت با افزونه‌های دیگر تداخل دارد؟</b></summary>
+خیر؛ از آنجا که این راهکار متکی بر هیچ اکستنشن اضافی در VS Code نبوده و فقط استایل‌های کلاس‌های اختصاصی پنل Antigravity را هدف قرار می‌دهد، هیچ‌گونه تداخلی ایجاد نمی‌کند.
+</details>
+
+<details>
+<summary><b>چگونه به نسخه اولیه برگردم؟</b></summary>
+کافی است دستور حذف را اجرا کنید (`./setup.sh uninstall` در لینوکس یا `pwsh -File ./setup.ps1 -Uninstall` در ویندوز). اسکریپت نسخه‌های بکاپ `.bak` را بازیابی می‌کند.
+</details>
 
 ---
 
-## 📄 License
+## 📄 مجوز (License)
 
-This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
+این پروژه تحت مجوز متن‌باز [MIT License](LICENSE) منتشر شده است و استفاده شخصی و تجاری از آن آزاد است.
 
-Developed with ❤️ by [Mehdi Chamani](https://github.com/mehdichamani).
+توسعه‌یافته با ❤️ توسط [مهدی چمنی (Mehdi Chamani)](https://github.com/mehdichamani).
+
+</div>
