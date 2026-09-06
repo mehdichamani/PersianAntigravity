@@ -20,7 +20,12 @@ CYAN='\033[1;36m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+SCRIPT_DIR=""
+if [[ -n "${BASH_SOURCE[0]:-}" && -f "${BASH_SOURCE[0]}" ]]; then
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+elif [[ -n "${0:-}" && -f "${0:-}" ]]; then
+    SCRIPT_DIR="$(cd "$(dirname "$0")" &>/dev/null && pwd)"
+fi
 
 # Language Selection (Interactive Persian test / Terminal compatibility)
 LANG_CHOICE=""
@@ -40,28 +45,45 @@ for arg in "$@"; do
 done
 
 if [[ -z "$LANG_CHOICE" ]]; then
-    # Don't prompt if help or non-interactive (no tty)
+    # Don't prompt if help requested
     first_arg="${FILTERED_ARGS[0]:-}"
-    if [[ "$first_arg" != "help" && "$first_arg" != "--help" && "$first_arg" != "-h" ]] && [ -t 0 ]; then
-        echo -e "${CYAN}======================================================================${NC}"
-        echo -e "به پروژه فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) خوش آمدید!"
-        echo -e "${YELLOW}اگر این متن فارسی را بدون به‌هم‌ریختگی می‌بینید، با فارسی ادامه دهید.${NC}"
-        echo -e "----------------------------------------------------------------------"
-        echo -e "If the Persian text above looks garbled or broken, continue in English."
-        echo -e "${CYAN}======================================================================${NC}"
-        echo -e "  [1] فارسی (Persian)"
-        echo -e "  [2] English [Default]\n"
+    if [[ "$first_arg" != "help" && "$first_arg" != "--help" && "$first_arg" != "-h" ]]; then
+        # Check if we have an interactive TTY available (stdin or /dev/tty when piped)
+        tty_in=""
+        if [ -t 0 ]; then
+            tty_in="stdin"
+        elif [ -r /dev/tty ]; then
+            tty_in="/dev/tty"
+        fi
 
-        read -r -p "Select language / انتخاب زبان [1/2] (Default: 2): " user_input || user_input=""
-        if [[ "$user_input" =~ ^[[:space:]]*1[[:space:]]*$ ]]; then
-            LANG_CHOICE="fa"
-            echo -e "${GREEN}زبان فارسی انتخاب شد.${NC}\n"
+        if [[ -n "$tty_in" ]]; then
+            echo -e "${CYAN}======================================================================${NC}"
+            echo -e "به پروژه فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) خوش آمدید!"
+            echo -e "${YELLOW}اگر این متن فارسی را بدون به‌هم‌ریختگی می‌بینید، با فارسی ادامه دهید.${NC}"
+            echo -e "----------------------------------------------------------------------"
+            echo -e "If the Persian text above looks garbled or broken, continue in English."
+            echo -e "${CYAN}======================================================================${NC}"
+            echo -e "  [1] فارسی (Persian) [Default]"
+            echo -e "  [2] English\n"
+
+            if [[ "$tty_in" == "/dev/tty" ]]; then
+                read -r -p "Select language / انتخاب زبان [1/2] (Default: 1): " user_input < /dev/tty || user_input=""
+            else
+                read -r -p "Select language / انتخاب زبان [1/2] (Default: 1): " user_input || user_input=""
+            fi
+
+            if [[ "$user_input" =~ ^[[:space:]]*2[[:space:]]*$ ]]; then
+                LANG_CHOICE="en"
+                echo -e "${GREEN}English selected.${NC}\n"
+            else
+                LANG_CHOICE="fa"
+                echo -e "${GREEN}زبان فارسی انتخاب شد.${NC}\n"
+            fi
         else
-            LANG_CHOICE="en"
-            echo -e "${GREEN}English selected.${NC}\n"
+            LANG_CHOICE="fa"
         fi
     else
-        LANG_CHOICE="en"
+        LANG_CHOICE="fa"
     fi
 fi
 
@@ -206,10 +228,10 @@ else
 fi
 
 # Resolve real user and home directory (handles execution directly or through sudo)
-REAL_USER="${SUDO_USER:-$USER}"
-REAL_HOME=$(getent passwd "$REAL_USER" 2>/dev/null | cut -d: -f6 || echo "$HOME")
+REAL_USER="${SUDO_USER:-${USER:-$(id -un 2>/dev/null || whoami 2>/dev/null || echo "root")}}"
+REAL_HOME=$(getent passwd "$REAL_USER" 2>/dev/null | cut -d: -f6 || echo "${HOME:-}")
 if [[ -z "$REAL_HOME" || ! -d "$REAL_HOME" ]]; then
-    REAL_HOME="$HOME"
+    REAL_HOME="${HOME:-/root}"
 fi
 
 # Locate Antigravity IDE application directory
@@ -312,7 +334,21 @@ ensure_root() {
         if [[ $EUID -ne 0 ]]; then
             echo -e "${YELLOW}${M[ADMIN_REQ]}${NC}"
             echo -e "${CYAN}${M[ADMIN_ELEVATING]}${NC}"
-            exec sudo -E bash "$0" "--lang=$LANG_CHOICE" "${FILTERED_ARGS[@]}"
+            if [[ -n "${BASH_SOURCE[0]:-}" && -f "${BASH_SOURCE[0]}" ]]; then
+                exec sudo -E bash "${BASH_SOURCE[0]}" "--lang=$LANG_CHOICE" "${FILTERED_ARGS[@]}"
+            elif [[ -f "${0:-}" ]]; then
+                exec sudo -E bash "$0" "--lang=$LANG_CHOICE" "${FILTERED_ARGS[@]}"
+            else
+                local tmp_script
+                tmp_script="$(mktemp /tmp/persian-antigravity-setup.XXXXXX.sh)"
+                if curl -fsSL "https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.sh" -o "$tmp_script"; then
+                    chmod +x "$tmp_script"
+                    exec sudo -E bash "$tmp_script" "--lang=$LANG_CHOICE" "${FILTERED_ARGS[@]}"
+                else
+                    echo -e "${RED}[✗] Sudo elevation failed in one-liner mode. Please run with sudo or clone repo.${NC}"
+                    exit 1
+                fi
+            fi
         fi
     fi
 }
@@ -792,9 +828,12 @@ do_proxy() {
     mkdir -p "$bin_dir" "$app_dir_desk"
 
     local target_script="$bin_dir/antigravity-proxy"
-    local source_script="$SCRIPT_DIR/scripts/antigravity-proxy.sh"
+    local source_script=""
+    if [[ -n "$SCRIPT_DIR" ]]; then
+        source_script="$SCRIPT_DIR/scripts/antigravity-proxy.sh"
+    fi
 
-    if [[ -f "$source_script" ]]; then
+    if [[ -n "$source_script" && -f "$source_script" ]]; then
         cp -f "$source_script" "$target_script"
     else
         # Fallback inline creation if running via curl pipe

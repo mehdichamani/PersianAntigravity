@@ -36,6 +36,11 @@ Run the installer via `curl`:
 curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.sh | bash
 ```
 
+> 💡 *Note:* If Antigravity IDE is installed in a system directory (such as `/opt/`), the script will automatically request `sudo` elevation if needed. You can also pipe directly into `sudo bash`:
+> ```bash
+> curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.sh | sudo bash
+> ```
+
 ### Windows (PowerShell 7+)
 
 Run the installer in PowerShell:

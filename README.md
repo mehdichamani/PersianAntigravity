@@ -57,6 +57,11 @@
 curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.sh | bash
 ```
 
+> 💡 *نکته:* در صورت نصب Antigravity IDE در مسیرهای سیستمی (مانند `/opt/`)، اسکریپت به‌طور خودکار ارتقای دسترسی با `sudo` را انجام می‌دهد. همچنین می‌توانید مستقیماً دستور را با `sudo` اجرا کنید:
+> ```bash
+> curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.sh | sudo bash
+> ```
+
 ### 🪟 ویندوز (Windows PowerShell)
 
 پنجره PowerShell (ترجیحاً نسخه 7 یا بالاتر) را باز کرده و دستور زیر را وارد کنید:

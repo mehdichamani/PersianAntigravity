@@ -42,17 +42,17 @@ function Setup-PersianAntigravityIDE {
         Write-Host "----------------------------------------------------------------------" -ForegroundColor DarkGray
         Write-Host "If the Persian text above looks garbled or broken, continue in English." -ForegroundColor White
         Write-Host "======================================================================" -ForegroundColor Cyan
-        Write-Host "  [1] فارسی (Persian)" -ForegroundColor White
-        Write-Host "  [2] English [Default]" -ForegroundColor White
+        Write-Host "  [1] فارسی (Persian) [Default]" -ForegroundColor White
+        Write-Host "  [2] English" -ForegroundColor White
         Write-Host ""
 
-        $choice = Read-Host "Select language / انتخاب زبان [1/2] (Default: 2)"
-        if ($choice -match '^\s*1\s*$') {
-            $Lang = 'fa'
-            Write-Host "زبان فارسی انتخاب شد.`n" -ForegroundColor Green
-        } else {
+        $choice = Read-Host "Select language / انتخاب زبان [1/2] (Default: 1)"
+        if ($choice -match '^\s*2\s*$') {
             $Lang = 'en'
             Write-Host "English selected.`n" -ForegroundColor Green
+        } else {
+            $Lang = 'fa'
+            Write-Host "زبان فارسی انتخاب شد.`n" -ForegroundColor Green
         }
     }
 
@@ -612,14 +612,14 @@ li:dir(rtl) {
         $destBat = Join-Path $toolsDir "antigravity-proxy.bat"
 
         # Copy from local repo scripts directory if available, or write directly
-        $localScriptsDir = Join-Path $PSScriptRoot "scripts"
-        $sourcePs1 = Join-Path $localScriptsDir "antigravity-proxy.ps1"
-        $sourceBat = Join-Path $localScriptsDir "antigravity-proxy.bat"
+        $localScriptsDir = if ($PSScriptRoot) { Join-Path $PSScriptRoot "scripts" } else { "" }
+        $sourcePs1 = if ($localScriptsDir) { Join-Path $localScriptsDir "antigravity-proxy.ps1" } else { "" }
+        $sourceBat = if ($localScriptsDir) { Join-Path $localScriptsDir "antigravity-proxy.bat" } else { "" }
 
-        if (Test-Path -LiteralPath $sourcePs1) {
+        if ($sourcePs1 -and (Test-Path -LiteralPath $sourcePs1)) {
             Copy-Item -LiteralPath $sourcePs1 -Destination $destPs1 -Force
         }
-        if (Test-Path -LiteralPath $sourceBat) {
+        if ($sourceBat -and (Test-Path -LiteralPath $sourceBat)) {
             Copy-Item -LiteralPath $sourceBat -Destination $destBat -Force
         }
 
@@ -851,7 +851,7 @@ li:dir(rtl) {
 Set-Alias -Name setup-persian-antigravity-ide -Value Setup-PersianAntigravityIDE -Scope Global -ErrorAction SilentlyContinue
 Set-Alias -Name setup-antigravity-rtl -Value Setup-PersianAntigravityIDE -Scope Global -ErrorAction SilentlyContinue
 
-# If executed directly as a script (not dot-sourced)
-if ($MyInvocation.InvocationName -ne '.' -and $MyInvocation.Line -match 'setup\.ps1') {
+# If executed directly as a script or via pipeline/iex (not dot-sourced)
+if ($MyInvocation.InvocationName -ne '.') {
     Setup-PersianAntigravityIDE @args
 }
