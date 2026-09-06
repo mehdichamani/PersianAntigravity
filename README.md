@@ -16,6 +16,10 @@
   <a href="#"><img src="https://img.shields.io/badge/فونت-وزیرمتن-success.svg" alt="فونت وزیرمتن"></a>
 </p>
 
+<p align="center">
+  <img src="assets/preview.webp" alt="پیش‌نمایش فارسی‌ساز Antigravity IDE" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+</p>
+
 ---
 
 ## 🎯 چرا فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE)؟

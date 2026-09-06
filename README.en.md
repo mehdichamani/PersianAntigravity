@@ -8,6 +8,10 @@
 [![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-informational.svg)](#)
 [![Target](https://img.shields.io/badge/Target-Antigravity%20IDE-blueviolet.svg)](#)
 
+<p align="center">
+  <img src="assets/preview.webp" alt="Persian Antigravity IDE Preview" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+</p>
+
 ---
 
 ## ⚡ Highlights
