@@ -103,6 +103,10 @@ if [[ "$LANG_CHOICE" == "fa" ]]; then
     M[INST_HEADER]="=== در حال نصب فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) ==="
     M[INST_SUCCESS]="✔ فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) با موفقیت نصب شد!"
     M[INST_RESTART]="لطفاً نرم‌افزار Antigravity IDE را ببندید و دوباره باز کنید تا تغییرات اعمال گردند."
+    M[PROXY_HEADER]="=== ایجاد میانبر لانچر پروکسی Antigravity IDE ==="
+    M[PROXY_BIN_INSTALLED]="[✓] اسکریپت کمکی در مسیر کاربر نصب شد: "
+    M[PROXY_DESKTOP_INSTALLED]="[✓] فایل میانبر دسکتاپ ایجاد شد: "
+    M[PROXY_INFO_MSG]="از این پس می‌توانید با دستور 'antigravity-proxy' در ترمینال یا از منوی برنامه‌ها، IDE را با پروکسی سیستم اجرا نمایید."
     M[UNINST_HEADER]="=== بازگردانی تغییرات فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) ==="
     M[RESTORE_HTML]="[✓] فایل workbench.html از نسخه پشتیبان بازگردانی شد."
     M[REMOVE_TAGS]="[✓] تگ‌های راست‌چین از workbench.html حذف گردید."
@@ -165,8 +169,12 @@ else
     M[CFG_MD]="[*] Configuring user Markdown preview (Ctrl+Shift+V)..."
     M[MD_CONFIGURED]="[✓] Markdown RTL preview styles & settings configured."
     M[INST_HEADER]="=== Installing PersianAntigravityIDE ==="
-    M[INST_SUCCESS]="✔ PersianAntigravityIDE successfully installed!"
+    M[INST_SUCCESS]="✔ PersianAntigravityIDE and Vazirmatn successfully installed!"
     M[INST_RESTART]="Please restart Antigravity IDE to apply all visual changes."
+    M[PROXY_HEADER]="=== Setting up Antigravity IDE Proxy Launcher ==="
+    M[PROXY_BIN_INSTALLED]="[✓] Helper launcher script installed to: "
+    M[PROXY_DESKTOP_INSTALLED]="[✓] Desktop entry created: "
+    M[PROXY_INFO_MSG]="You can now launch Antigravity IDE with automatic system proxy injection via 'antigravity-proxy' CLI or from your applications menu."
     M[UNINST_HEADER]="=== Reverting PersianAntigravityIDE Setup ==="
     M[RESTORE_HTML]="[✓] Restored workbench.html from backup."
     M[REMOVE_TAGS]="[✓] Removed RTL tags from workbench.html."
@@ -776,6 +784,70 @@ except:
     fi
 }
 
+do_proxy() {
+    echo -e "${CYAN}${M[PROXY_HEADER]}${NC}"
+
+    local bin_dir="$REAL_HOME/.local/bin"
+    local app_dir_desk="$REAL_HOME/.local/share/applications"
+    mkdir -p "$bin_dir" "$app_dir_desk"
+
+    local target_script="$bin_dir/antigravity-proxy"
+    local source_script="$SCRIPT_DIR/scripts/antigravity-proxy.sh"
+
+    if [[ -f "$source_script" ]]; then
+        cp -f "$source_script" "$target_script"
+    else
+        # Fallback inline creation if running via curl pipe
+        cat << 'EOF' > "$target_script"
+#!/usr/bin/env bash
+TARGET_CMD="antigravity-ide"
+DETECTED_PROXY=""
+if [[ -n "${http_proxy:-}" ]]; then DETECTED_PROXY="$http_proxy"; elif [[ -n "${HTTP_PROXY:-}" ]]; then DETECTED_PROXY="$HTTP_PROXY"; elif [[ -n "${all_proxy:-}" ]]; then DETECTED_PROXY="$all_proxy"; fi
+if [[ -z "$DETECTED_PROXY" ]] && command -v gsettings &>/dev/null; then
+    MODE=$(gsettings get org.gnome.system.proxy mode 2>/dev/null | tr -d "'")
+    if [[ "$MODE" == "manual" ]]; then
+        H=$(gsettings get org.gnome.system.proxy.http host 2>/dev/null | tr -d "'")
+        P=$(gsettings get org.gnome.system.proxy.http port 2>/dev/null)
+        [[ -n "$H" && "$P" -gt 0 ]] && DETECTED_PROXY="http://${H}:${P}"
+    fi
+fi
+if [[ -z "$DETECTED_PROXY" ]] && command -v kreadconfig6 &>/dev/null; then
+    [[ $(kreadconfig6 --file kioslaverc --group "Proxy Settings" --key "ProxyType" 2>/dev/null) == "1" ]] && DETECTED_PROXY=$(kreadconfig6 --file kioslaverc --group "Proxy Settings" --key "httpProxy" 2>/dev/null)
+fi
+if [[ -z "$DETECTED_PROXY" ]] && command -v kreadconfig5 &>/dev/null; then
+    [[ $(kreadconfig5 --file kioslaverc --group "Proxy Settings" --key "ProxyType" 2>/dev/null) == "1" ]] && DETECTED_PROXY=$(kreadconfig5 --file kioslaverc --group "Proxy Settings" --key "httpProxy" 2>/dev/null)
+fi
+if [[ -n "$DETECTED_PROXY" ]]; then
+    [[ ! "$DETECTED_PROXY" =~ ^[a-zA-Z0-9]+:// ]] && DETECTED_PROXY="http://$DETECTED_PROXY"
+    export http_proxy="$DETECTED_PROXY" https_proxy="$DETECTED_PROXY" HTTP_PROXY="$DETECTED_PROXY" HTTPS_PROXY="$DETECTED_PROXY" all_proxy="$DETECTED_PROXY" ALL_PROXY="$DETECTED_PROXY"
+fi
+exec "$TARGET_CMD" "$@"
+EOF
+    fi
+
+    chmod +x "$target_script"
+    echo -e "${GREEN}${M[PROXY_BIN_INSTALLED]}$target_script${NC}"
+
+    # Create Desktop Entry
+    local desktop_entry="$app_dir_desk/antigravity-proxy.desktop"
+    cat << EOF > "$desktop_entry"
+[Desktop Entry]
+Name=Antigravity IDE (Proxy)
+Comment=Launch Antigravity IDE with System Proxy
+Exec=$target_script %F
+Terminal=false
+Type=Application
+Icon=antigravity-ide
+Categories=Development;IDE;
+StartupWMClass=Antigravity IDE
+EOF
+    chmod +x "$desktop_entry"
+    echo -e "${GREEN}${M[PROXY_DESKTOP_INSTALLED]}$desktop_entry${NC}"
+
+    echo ""
+    echo -e "${CYAN}${M[PROXY_INFO_MSG]}${NC}"
+}
+
 cmd="${FILTERED_ARGS[0]:-install}"
 rest_args=()
 if [[ ${#FILTERED_ARGS[@]} -gt 1 ]]; then
@@ -792,11 +864,15 @@ case "$cmd" in
     status)
         do_status
         ;;
+    proxy|proxy-launcher)
+        do_proxy
+        ;;
     help|--help|-h)
-        echo "Usage: $(basename "$0") [install|uninstall|status|help] [--lang=fa|--lang=en]"
+        echo "Usage: $(basename "$0") [install|uninstall|status|proxy|help] [--lang=fa|--lang=en]"
         echo ""
         echo "Commands:"
         echo "  install    Install RTL CSS, JS, workbench patches and Vazirmatn font styling (default)"
+        echo "  proxy      Create 'antigravity-proxy' launcher command and Desktop shortcut"
         echo "  uninstall  Revert all patches and restore original workbench files"
         echo "  status     Check current installation and patch status"
         echo "  help       Show this help message"
@@ -807,7 +883,8 @@ case "$cmd" in
         ;;
     *)
         echo -e "${RED}Unknown command: $cmd${NC}"
-        echo "Usage: $(basename "$0") [install|uninstall|status|help] [--lang=fa|--lang=en]"
+        echo "Usage: $(basename "$0") [install|uninstall|status|proxy|help] [--lang=fa|--lang=en]"
         exit 1
         ;;
 esac
+

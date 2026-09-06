@@ -66,6 +66,9 @@ cd ~/projects/PersianAntigravityIDE
 # Install / Apply patches
 ./setup.sh install
 
+# Setup 'antigravity-proxy' command and Desktop shortcut
+./setup.sh proxy
+
 # Uninstall / Restore original state
 ./setup.sh uninstall
 ```
@@ -81,9 +84,23 @@ pwsh -File ./setup.ps1 -Status
 # Install / Apply patches
 pwsh -File ./setup.ps1 -Install
 
+# Setup Desktop shortcut with automatic System Proxy injection
+pwsh -File ./setup.ps1 -ProxyLauncher
+
 # Uninstall / Revert
 pwsh -File ./setup.ps1 -Uninstall
 ```
+
+---
+
+## 🌐 System Proxy Integration
+
+To solve connectivity restrictions and sanctions seamlessly, smart proxy launchers are provided in `scripts/`:
+- **Auto-Detection:** Automatically extracts active system proxy settings on Windows (via Registry), GNOME (`gsettings`), KDE Plasma (`kreadconfig`), and macOS (`scutil`).
+- **Environment Injection:** Dynamically populates `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY`, and `NO_PROXY` within the IDE process session without modifying global system settings.
+- **Usage:**
+  - **Windows:** Run `scripts/antigravity-proxy.bat` directly, or run `setup.ps1 -ProxyLauncher` to generate a dedicated desktop shortcut.
+  - **Linux / macOS:** Run `scripts/antigravity-proxy.sh` directly, or run `./setup.sh proxy` to install the `antigravity-proxy` CLI command and application menu launcher.
 
 ---
 
@@ -101,7 +118,10 @@ PersianAntigravityIDE/
 │   ├── antigravity-chat-rtl.css     # Workbench chat & artifact stylesheet
 │   └── markdown-rtl.css             # User Markdown preview stylesheet
 └── scripts/
-    └── antigravity-chat-rtl.js      # MutationObserver real-time RTL script
+    ├── antigravity-chat-rtl.js      # MutationObserver real-time RTL script
+    ├── antigravity-proxy.ps1        # Windows registry proxy injector script
+    ├── antigravity-proxy.bat        # Windows silent background launcher
+    └── antigravity-proxy.sh         # Linux/macOS universal proxy launcher
 ```
 
 ---

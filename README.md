@@ -87,6 +87,9 @@ cd ~/projects/PersianAntigravityIDE
 # اجرای فرآیند نصب و اعمال پچ‌ها
 ./setup.sh install
 
+# ایجاد میانبر لانچر با پروکسی سیستم
+./setup.sh proxy
+
 # حذف کامل پچ‌ها و بازگردانی وضعیت به نسخه اصلی
 ./setup.sh uninstall
 ```
@@ -102,9 +105,23 @@ pwsh -File ./setup.ps1 -Status
 # نصب و اعمال پچ‌ها
 pwsh -File ./setup.ps1 -Install
 
+# ایجاد میانبر لانچر دسکتاپ با پروکسی خودکار سیستم
+pwsh -File ./setup.ps1 -ProxyLauncher
+
 # حذف و بازگردانی فایل‌های اصلی
 pwsh -File ./setup.ps1 -Uninstall
 ```
+
+---
+
+## 🌐 راه‌اندازی با پروکسی سیستم (System Proxy Integration)
+
+برای حل مشکل تحریم‌ها و اتصال پایدار دستیار هوش مصنوعی، اسکریپت‌های لانچر هوشمند در پوشه `scripts/` قرار دارند:
+- **تشخیص خودکار پروکسی:** خواندن داینامیک تنظیمات پروکسی سیستم‌عامل در ویندوز (از Registry)، گنوم (`gsettings`)، کی‌دی‌ای (`kreadconfig`) و مکینتاش (`scutil`).
+- **تزریق خودکار متغیرها:** تنظیم مقادیر `HTTP_PROXY`، `HTTPS_PROXY`، `ALL_PROXY` و `NO_PROXY` برای فرایند IDE بدون تأثیر منفی روی کل سیستم.
+- **روش اجرا:**
+  - **ویندوز:** اجرای مستقیم `scripts/antigravity-proxy.bat` یا استفاده از سوییچ `setup.ps1 -ProxyLauncher` جهت ایجاد آیکون اختصاصی روی دسکتاپ.
+  - **لینوکس:** اجرای `scripts/antigravity-proxy.sh` یا استفاده از دستور `./setup.sh proxy` جهت ایجاد میانبر ترمینال `antigravity-proxy` و فایل `.desktop`.
 
 ---
 
@@ -122,7 +139,10 @@ PersianAntigravityIDE/
 │   ├── antigravity-chat-rtl.css     # استایل‌های شیک پنل چت و صفحات آرتیفکت
 │   └── markdown-rtl.css             # استایل‌های پیش‌نمایش فایل‌های Markdown
 └── scripts/
-    └── antigravity-chat-rtl.js      # اسکریپت پویای تشخیص کاراکترهای راست‌به‌چپ
+    ├── antigravity-chat-rtl.js      # اسکریپت پویای تشخیص کاراکترهای راست‌به‌چپ
+    ├── antigravity-proxy.ps1        # اسکریپت استخراج و تزریق پروکسی ویندوز
+    ├── antigravity-proxy.bat        # لانچر سبک بدون پنجره برای ویندوز
+    └── antigravity-proxy.sh         # لانچر جامع لینوکس و مک
 ```
 
 ---

@@ -20,6 +20,9 @@ function Setup-PersianAntigravityIDE {
         [Parameter(ParameterSetName = 'Status')]
         [switch]$Status,
 
+        [Parameter(ParameterSetName = 'ProxyLauncher')]
+        [switch]$ProxyLauncher,
+
         [Parameter()]
         [ValidateSet('fa', 'en')]
         [string]$Lang,
@@ -115,6 +118,11 @@ function Setup-PersianAntigravityIDE {
             InstMdSuccess        = "[v] استایل‌ها و تنظیمات مارک‌داون راست‌چین ذخیره شد."
             InstSuccess          = "فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) با موفقیت اعمال شد!"
             InstRestart          = "لطفاً نرم‌افزار Antigravity IDE را ببندید و دوباره باز کنید تا تغییرات اعمال گردند."
+            ProxyHeader          = "=== ایجاد میانبر لانچر پروکسی Antigravity IDE ==="
+            ProxyScriptCreated   = "[v] اسکریپت لانچر پروکسی ایجاد گردید در: {0}"
+            ProxyDesktopCreated  = "[v] میانبر دسکتاپ ایجاد شد: {0}"
+            ProxyShortcutErr     = "[!] خطا در ساخت میانبر دسکتاپ: {0}"
+            ProxyInfoMsg         = "از این پس می‌توانید با باز کردن این میانبر، Antigravity IDE را با پروکسی سیستم اجرا نمایید."
         }
     } else {
         @{
@@ -177,6 +185,11 @@ function Setup-PersianAntigravityIDE {
             InstMdSuccess        = "[v] Markdown RTL preview styles & settings configured."
             InstSuccess          = "PersianAntigravityIDE and Vazirmatn successfully installed!"
             InstRestart          = "Please restart Antigravity IDE to apply all visual changes."
+            ProxyHeader          = "=== Setting up Antigravity IDE Proxy Launcher ==="
+            ProxyScriptCreated   = "[v] Proxy launcher script installed at: {0}"
+            ProxyDesktopCreated  = "[v] Desktop shortcut created: {0}"
+            ProxyShortcutErr     = "[!] Warning creating desktop shortcut: {0}"
+            ProxyInfoMsg         = "You can now launch Antigravity IDE with automatic system proxy injection using this shortcut."
         }
     }
 
@@ -582,6 +595,68 @@ li:dir(rtl) {
         } else {
             Write-Host ($M.StatusMarkdown -f $M.StatusNotConfigured) -ForegroundColor Yellow
         }
+        return
+    }
+
+    # --- PROXY LAUNCHER ACTION ---
+    if ($ProxyLauncher) {
+        Write-Host ""
+        Write-Host $M.ProxyHeader -ForegroundColor Cyan
+
+        $toolsDir = Join-Path $userConfigDir "tools"
+        if (-not (Test-Path -LiteralPath $toolsDir)) {
+            New-Item -ItemType Directory -Path $toolsDir -Force | Out-Null
+        }
+
+        $destPs1 = Join-Path $toolsDir "antigravity-proxy.ps1"
+        $destBat = Join-Path $toolsDir "antigravity-proxy.bat"
+
+        # Copy from local repo scripts directory if available, or write directly
+        $localScriptsDir = Join-Path $PSScriptRoot "scripts"
+        $sourcePs1 = Join-Path $localScriptsDir "antigravity-proxy.ps1"
+        $sourceBat = Join-Path $localScriptsDir "antigravity-proxy.bat"
+
+        if (Test-Path -LiteralPath $sourcePs1) {
+            Copy-Item -LiteralPath $sourcePs1 -Destination $destPs1 -Force
+        }
+        if (Test-Path -LiteralPath $sourceBat) {
+            Copy-Item -LiteralPath $sourceBat -Destination $destBat -Force
+        }
+
+        Write-Host ($M.ProxyScriptCreated -f $destBat) -ForegroundColor Green
+
+        # Create Desktop Shortcut
+        try {
+            $desktopPath = [Environment]::GetFolderPath("Desktop")
+            if ($desktopPath -and (Test-Path -LiteralPath $desktopPath)) {
+                $shortcutPath = Join-Path $desktopPath "Antigravity IDE (Proxy).lnk"
+                $wshShell = New-Object -ComObject WScript.Shell
+                $shortcut = $wshShell.CreateShortcut($shortcutPath)
+                $shortcut.TargetPath = $destBat
+                $shortcut.WorkingDirectory = $toolsDir
+                $shortcut.WindowStyle = 7 # Minimized / hidden
+                $shortcut.Description = "Launch Antigravity IDE with System Proxy Injection"
+                
+                # Attempt to set icon from executable
+                $binCandidates = @(
+                    "$env:LOCALAPPDATA\Programs\Antigravity IDE\Antigravity IDE.exe",
+                    "$env:ProgramFiles\Antigravity IDE\Antigravity IDE.exe"
+                )
+                foreach ($b in $binCandidates) {
+                    if (Test-Path -LiteralPath $b) {
+                        $shortcut.IconLocation = "$b,0"
+                        break
+                    }
+                }
+                $shortcut.Save()
+                Write-Host ($M.ProxyDesktopCreated -f $shortcutPath) -ForegroundColor Green
+            }
+        } catch {
+            Write-Host ($M.ProxyShortcutErr -f $_) -ForegroundColor Yellow
+        }
+
+        Write-Host ""
+        Write-Host $M.ProxyInfoMsg -ForegroundColor Cyan
         return
     }
 
