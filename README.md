@@ -1,8 +1,8 @@
-# فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) 🇮🇷 🇦🇪
+# فارسی ساز آنتی گرویتی (PersianAntigravity) 🇮🇷 🇦🇪
 
 <div dir="rtl">
 
-> **پشتیبانی بومی، پایدار و بدون نیاز به افزونه از زبان‌های راست‌به‌چپ (فارسی و عربی) و فونت زیبای وزیرمتن در محیط توسعه Antigravity IDE.**
+> **پشتیبانی بومی، پایدار و بدون نیاز به افزونه از زبان‌های راست‌به‌چپ (فارسی و عربی) و فونت زیبای وزیرمتن در محیط توسعه Antigravity IDE و نرم‌افزار Antigravity App.**
 
 <p align="center">
   <a href="README.md"><b>🇮🇷 مستندات فارسی</b></a> •
@@ -12,17 +12,17 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="مجوز MIT"></a>
   <a href="#"><img src="https://img.shields.io/badge/سیستم‌عامل-لینوکس%20%7C%20ویندوز%20%7C%20مک-informational.svg" alt="پلتفرم‌ها"></a>
-  <a href="#"><img src="https://img.shields.io/badge/پشتیبانی-Antigravity%20IDE-blueviolet.svg" alt="محیط هدف"></a>
+  <a href="#"><img src="https://img.shields.io/badge/پشتیبانی-Antigravity%20IDE%20%26%20App-blueviolet.svg" alt="محیط هدف"></a>
   <a href="#"><img src="https://img.shields.io/badge/فونت-وزیرمتن-success.svg" alt="فونت وزیرمتن"></a>
 </p>
 
 <p align="center">
-  <img src="assets/preview.webp" alt="پیش‌نمایش فارسی‌ساز Antigravity IDE" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+  <img src="assets/preview.webp" alt="پیش‌نمایش فارسی‌ساز Antigravity" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
 </p>
 
 ---
 
-## 🎯 چرا فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE)؟
+## 🎯 چرا فارسی ساز آنتی گرویتی (PersianAntigravity)؟
 
 محیط توسعه **Google Antigravity IDE** به طور پیش‌فرض متون زبان‌های راست‌به‌چپ (مانند فارسی و عربی) را در پنل چت هوش مصنوعی (`Chat Side Panel`) و صفحات برنامه‌ریزی معماری (`Implementation Plans` و `Artifacts`) به صورت چپ‌چین و نامنظم نمایش می‌دهد. افزونه‌های معمول VS Code نیز یا روی Antigravity IDE کار نمی‌کنند یا سرعت محیط را کاهش داده و خطوط کد را به اشتباه راست‌چین می‌کنند.
 
@@ -54,12 +54,12 @@
 دستور زیر را در ترمینال (Bash/Zsh) اجرا کنید:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravity/main/setup.sh | bash
 ```
 
 > 💡 *نکته:* در صورت نصب Antigravity IDE در مسیرهای سیستمی (مانند `/opt/`)، اسکریپت به‌طور خودکار ارتقای دسترسی با `sudo` را انجام می‌دهد. همچنین می‌توانید مستقیماً دستور را با `sudo` اجرا کنید:
 > ```bash
-> curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.sh | sudo bash
+> curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravity/main/setup.sh | sudo bash
 > ```
 
 ### 🪟 ویندوز (Windows PowerShell)
@@ -67,10 +67,10 @@ curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/
 پنجره PowerShell (ترجیحاً نسخه 7 یا بالاتر) را باز کرده و دستور زیر را وارد کنید:
 
 ```powershell
-irm https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.ps1 | iex
+irm https://raw.githubusercontent.com/mehdichamani/PersianAntigravity/main/setup.ps1 | iex
 ```
 
-> **نکته:** پس از اتمام نصب، محیط **Antigravity IDE** را یک‌بار ببندید و مجدداً باز کنید تا تغییرات بصری اعمال شوند.
+> **نکته:** پس از اتمام نصب، برنامه یا محیط **Antigravity** را یک‌بار ببندید و مجدداً باز کنید تا تغییرات بصری اعمال شوند.
 
 ---
 
@@ -79,8 +79,8 @@ irm https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/se
 در صورت تمایل به اجرای محلی یا بررسی کدها قبل از نصب:
 
 ```bash
-git clone https://github.com/mehdichamani/PersianAntigravityIDE.git ~/projects/PersianAntigravityIDE
-cd ~/projects/PersianAntigravityIDE
+git clone https://github.com/mehdichamani/PersianAntigravity.git ~/projects/PersianAntigravity
+cd ~/projects/PersianAntigravity
 ```
 
 ### در لینوکس و مک (`setup.sh`)
@@ -144,7 +144,7 @@ pwsh -File ./setup.ps1 -Uninstall
 ## 📁 ساختار مخزن
 
 ```text
-PersianAntigravityIDE/
+PersianAntigravity/
 ├── .gitignore
 ├── LICENSE                          # مجوز نرم‌افزار (MIT)
 ├── README.md                        # مستندات فارسی پروژه

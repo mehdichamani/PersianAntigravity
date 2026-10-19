@@ -1,15 +1,15 @@
-# PersianAntigravityIDE - RTL & Persian Typography for Antigravity IDE 🇮🇷 🇦🇪
+# PersianAntigravity - RTL & Persian Typography for Antigravity 🇮🇷 🇦🇪
 
-> **Native, Extension-Free Right-to-Left (RTL) & Vazirmatn Font Support Exclusively Crafted for Antigravity IDE.**
+> **Native, Extension-Free Right-to-Left (RTL) & Vazirmatn Font Support Exclusively Crafted for Antigravity IDE & Antigravity App.**
 
 [🇮🇷 مستندات فارسی (Persian)](README.md) | [English Documentation](README.en.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-informational.svg)](#)
-[![Target](https://img.shields.io/badge/Target-Antigravity%20IDE-blueviolet.svg)](#)
+[![Target](https://img.shields.io/badge/Target-Antigravity%20IDE%20%26%20App-blueviolet.svg)](#)
 
 <p align="center">
-  <img src="assets/preview.webp" alt="Persian Antigravity IDE Preview" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+  <img src="assets/preview.webp" alt="Persian Antigravity Preview" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
 </p>
 
 ---
@@ -33,12 +33,12 @@
 Run the installer via `curl`:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravity/main/setup.sh | bash
 ```
 
 > 💡 *Note:* If Antigravity IDE is installed in a system directory (such as `/opt/`), the script will automatically request `sudo` elevation if needed. You can also pipe directly into `sudo bash`:
 > ```bash
-> curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.sh | sudo bash
+> curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravity/main/setup.sh | sudo bash
 > ```
 
 ### Windows (PowerShell 7+)
@@ -46,10 +46,10 @@ curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/
 Run the installer in PowerShell:
 
 ```powershell
-irm https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.ps1 | iex
+irm https://raw.githubusercontent.com/mehdichamani/PersianAntigravity/main/setup.ps1 | iex
 ```
 
-*After installation, restart Antigravity IDE to apply visual changes.*
+*After installation, restart Antigravity to apply visual changes.*
 
 ---
 
@@ -58,8 +58,8 @@ irm https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/se
 If you prefer to clone the repository locally:
 
 ```bash
-git clone https://github.com/mehdichamani/PersianAntigravityIDE.git ~/projects/PersianAntigravityIDE
-cd ~/projects/PersianAntigravityIDE
+git clone https://github.com/mehdichamani/PersianAntigravity.git ~/projects/PersianAntigravity
+cd ~/projects/PersianAntigravity
 ```
 
 ### Linux / macOS (`setup.sh`)
@@ -123,7 +123,7 @@ To solve connectivity restrictions and sanctions seamlessly, smart proxy launche
 ## 📁 Project Structure
 
 ```
-PersianAntigravityIDE/
+PersianAntigravity/
 ├── .gitignore
 ├── LICENSE                          # MIT License
 ├── README.md                        # Persian Documentation (مستندات فارسی)

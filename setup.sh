@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# PersianAntigravityIDE - فارسی ساز محیط توسعه آنتی گرویتی
+# PersianAntigravity - فارسی ساز آنتی گرویتی
 # Setup & Automation Script
 # ==============================================================================
-# Project: https://github.com/mehdichamani/PersianAntigravityIDE
+# Project: https://github.com/mehdichamani/PersianAntigravity
 # Author:  Mehdi Chamani
 # License: MIT
-# Target:  Antigravity IDE (Linux / macOS)
+# Target:  Antigravity IDE & Antigravity App (Linux / macOS)
 # ==============================================================================
 
 set -euo pipefail
@@ -68,7 +68,7 @@ if [[ -z "$LANG_CHOICE" ]]; then
 
         if [[ -n "$tty_in" ]]; then
             echo -e "${CYAN}======================================================================${NC}"
-            echo -e "به پروژه فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) خوش آمدید!"
+            echo -e "به پروژه فارسی ساز آنتی گرویتی (PersianAntigravity) خوش آمدید!"
             echo -e "${YELLOW}اگر این متن فارسی را بدون به‌هم‌ریختگی می‌بینید، با فارسی ادامه دهید.${NC}"
             echo -e "----------------------------------------------------------------------"
             echo -e "If the Persian text above looks garbled or broken, continue in English."
@@ -132,14 +132,14 @@ if [[ "$LANG_CHOICE" == "fa" ]]; then
     M[CHK_BYPASSED]="[✓] بای‌پس چک‌سام اعمال شد (جلوگیری از خطای corrupt/unsupported)."
     M[CFG_MD]="[*] در حال تنظیم پیش‌نمایش مارک‌داون (Ctrl+Shift+V)..."
     M[MD_CONFIGURED]="[✓] استایل‌ها و تنظیمات مارک‌داون راست‌چین پیکربندی شد."
-    M[INST_HEADER]="=== در حال نصب فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) ==="
-    M[INST_SUCCESS]="✔ فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) با موفقیت نصب شد!"
-    M[INST_RESTART]="لطفاً نرم‌افزار Antigravity IDE را ببندید و دوباره باز کنید تا تغییرات اعمال گردند."
+    M[INST_HEADER]="=== در حال نصب فارسی ساز آنتی گرویتی (PersianAntigravity) ==="
+    M[INST_SUCCESS]="✔ فارسی ساز آنتی گرویتی (PersianAntigravity) با موفقیت نصب شد!"
+    M[INST_RESTART]="لطفاً برنامه یا محیط توسعه را ببندید و دوباره باز کنید تا تغییرات اعمال گردند."
     M[PROXY_HEADER]="=== ایجاد میانبر لانچر پروکسی Antigravity IDE ==="
     M[PROXY_BIN_INSTALLED]="[✓] اسکریپت کمکی در مسیر کاربر نصب شد: "
     M[PROXY_DESKTOP_INSTALLED]="[✓] فایل میانبر دسکتاپ ایجاد شد: "
     M[PROXY_INFO_MSG]="از این پس می‌توانید با دستور 'antigravity-proxy' در ترمینال یا از منوی برنامه‌ها، IDE را با پروکسی سیستم اجرا نمایید."
-    M[UNINST_HEADER]="=== بازگردانی تغییرات فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) ==="
+    M[UNINST_HEADER]="=== بازگردانی تغییرات فارسی ساز آنتی گرویتی (PersianAntigravity) ==="
     M[RESTORE_HTML]="[✓] فایل workbench.html از نسخه پشتیبان بازگردانی شد."
     M[REMOVE_TAGS]="[✓] تگ‌های راست‌چین از workbench.html حذف گردید."
     M[REMOVE_CSS]="[✓] فایل antigravity-chat-rtl.css حذف شد."
@@ -147,9 +147,9 @@ if [[ "$LANG_CHOICE" == "fa" ]]; then
     M[RESTORE_PROD]="[✓] فایل product.json از نسخه پشتیبان بازگردانی شد."
     M[REMOVE_MD_CSS]="[✓] فایل markdown-rtl.css حذف شد."
     M[CLEAN_MD_SETTING]="[✓] استایل‌های مارک‌داون از settings.json پاکسازی شد."
-    M[UNINST_SUCCESS]="✔ فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) با موفقیت حذف گردید."
-    M[UNINST_RESTART]="لطفاً نرم‌افزار Antigravity IDE را مجدداً راه‌اندازی کنید."
-    M[STATUS_HEADER]="=== وضعیت فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) ==="
+    M[UNINST_SUCCESS]="✔ فارسی ساز آنتی گرویتی (PersianAntigravity) با موفقیت حذف گردید."
+    M[UNINST_RESTART]="لطفاً نرم‌افزار را مجدداً راه‌اندازی کنید."
+    M[STATUS_HEADER]="=== وضعیت فارسی ساز آنتی گرویتی (PersianAntigravity) ==="
     M[STATUS_APP_DIR]="  مسیر برنامه:        "
     M[STATUS_USER]="  کاربر هدف:          "
     M[STATUS_CONFIG]="  تنظیمات کاربر:      "
@@ -209,14 +209,14 @@ else
     M[CHK_BYPASSED]="[✓] Checksum bypass applied (prevents unsupported / corrupt warnings)."
     M[CFG_MD]="[*] Configuring user Markdown preview (Ctrl+Shift+V)..."
     M[MD_CONFIGURED]="[✓] Markdown RTL preview styles & settings configured."
-    M[INST_HEADER]="=== Installing PersianAntigravityIDE ==="
-    M[INST_SUCCESS]="✔ PersianAntigravityIDE and Vazirmatn successfully installed!"
-    M[INST_RESTART]="Please restart Antigravity IDE to apply all visual changes."
+    M[INST_HEADER]="=== Installing PersianAntigravity ==="
+    M[INST_SUCCESS]="✔ PersianAntigravity and Vazirmatn successfully installed!"
+    M[INST_RESTART]="Please restart Antigravity to apply all visual changes."
     M[PROXY_HEADER]="=== Setting up Antigravity IDE Proxy Launcher ==="
     M[PROXY_BIN_INSTALLED]="[✓] Helper launcher script installed to: "
     M[PROXY_DESKTOP_INSTALLED]="[✓] Desktop entry created: "
     M[PROXY_INFO_MSG]="You can now launch Antigravity IDE with automatic system proxy injection via 'antigravity-proxy' CLI or from your applications menu."
-    M[UNINST_HEADER]="=== Reverting PersianAntigravityIDE Setup ==="
+    M[UNINST_HEADER]="=== Reverting PersianAntigravity Setup ==="
     M[RESTORE_HTML]="[✓] Restored workbench.html from backup."
     M[REMOVE_TAGS]="[✓] Removed RTL tags from workbench.html."
     M[REMOVE_CSS]="[✓] Removed antigravity-chat-rtl.css."
@@ -224,9 +224,9 @@ else
     M[RESTORE_PROD]="[✓] Restored product.json from backup."
     M[REMOVE_MD_CSS]="[✓] Removed markdown-rtl.css."
     M[CLEAN_MD_SETTING]="[✓] Cleaned up markdown styles from settings.json."
-    M[UNINST_SUCCESS]="✔ PersianAntigravityIDE uninstalled cleanly."
-    M[UNINST_RESTART]="Please restart Antigravity IDE."
-    M[STATUS_HEADER]="=== PersianAntigravityIDE Status ==="
+    M[UNINST_SUCCESS]="✔ PersianAntigravity uninstalled cleanly."
+    M[UNINST_RESTART]="Please restart Antigravity."
+    M[STATUS_HEADER]="=== PersianAntigravity Status ==="
     M[STATUS_APP_DIR]="  App Directory:    "
     M[STATUS_USER]="  Target User:      "
     M[STATUS_CONFIG]="  User Config:      "
@@ -392,7 +392,7 @@ ensure_root() {
             else
                 local tmp_script
                 tmp_script="$(mktemp /tmp/persian-antigravity-setup.XXXXXX.sh)"
-                if curl -fsSL "https://raw.githubusercontent.com/mehdichamani/PersianAntigravityIDE/main/setup.sh" -o "$tmp_script"; then
+                if curl -fsSL "https://raw.githubusercontent.com/mehdichamani/PersianAntigravity/main/setup.sh" -o "$tmp_script"; then
                     chmod +x "$tmp_script"
                     exec sudo -E bash "$tmp_script" "--lang=$LANG_CHOICE" "${FILTERED_ARGS[@]}"
                 else
@@ -434,8 +434,8 @@ write_css_file() {
     else
         cat <<'EOF' > "$target"
 /* ==============================================================================
- * PersianAntigravityIDE - فارسی ساز محیط توسعه آنتی گرویتی
- * Project: https://github.com/mehdichamani/PersianAntigravityIDE
+ * PersianAntigravity - فارسی ساز آنتی گرویتی
+ * Project: https://github.com/mehdichamani/PersianAntigravity
  * ============================================================================== */
 
 .antigravity-agent-side-panel,
@@ -729,12 +729,16 @@ const cssText = process.argv[2];
 const jsText = process.argv[3];
 
 let content = fs.readFileSync(preloadPath, "utf8");
-const markerStart = "// ==PersianAntigravityIDE-Injection-Start==";
-const markerEnd = "// ==PersianAntigravityIDE-Injection-End==";
+const markerStart = "// ==PersianAntigravity-Injection-Start==";
+const markerEnd = "// ==PersianAntigravity-Injection-End==";
 
 if (content.includes(markerStart)) {
     const p1 = content.split(markerStart)[0];
     const p2 = content.split(markerEnd)[1];
+    content = p1 + p2;
+} else if (content.includes("// ==PersianAntigravityIDE-Injection-Start==")) {
+    const p1 = content.split("// ==PersianAntigravityIDE-Injection-Start==")[0];
+    const p2 = content.split("// ==PersianAntigravityIDE-Injection-End==")[1];
     content = p1 + p2;
 }
 

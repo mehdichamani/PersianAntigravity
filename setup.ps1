@@ -1,14 +1,14 @@
 # ==============================================================================
-# PersianAntigravityIDE - فارسی ساز محیط توسعه آنتی گرویتی
+# PersianAntigravity - فارسی ساز آنتی گرویتی
 # Setup & Automation Script (Windows)
 # ==============================================================================
-# Project: https://github.com/mehdichamani/PersianAntigravityIDE
+# Project: https://github.com/mehdichamani/PersianAntigravity
 # Author:  Mehdi Chamani
 # License: MIT
-# Target:  Antigravity IDE (Windows PowerShell 7+)
+# Target:  Antigravity IDE & Antigravity App (Windows PowerShell 7+)
 # ==============================================================================
 
-function Setup-PersianAntigravityIDE {
+function Setup-PersianAntigravity {
     [CmdletBinding(DefaultParameterSetName = 'Install')]
     param(
         [Parameter(ParameterSetName = 'Install')]
@@ -41,7 +41,7 @@ function Setup-PersianAntigravityIDE {
     if (-not $Lang) {
         Write-Host ""
         Write-Host "======================================================================" -ForegroundColor Cyan
-        Write-Host "به پروژه فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) خوش آمدید!" -ForegroundColor White
+        Write-Host "به پروژه فارسی ساز آنتی گرویتی (PersianAntigravity) خوش آمدید!" -ForegroundColor White
         Write-Host "اگر این متن فارسی را بدون به‌هم‌ریختگی می‌بینید، با فارسی ادامه دهید." -ForegroundColor Yellow
         Write-Host "----------------------------------------------------------------------" -ForegroundColor DarkGray
         Write-Host "If the Persian text above looks garbled or broken, continue in English." -ForegroundColor White
@@ -83,7 +83,7 @@ function Setup-PersianAntigravityIDE {
             FontInstalled        = "[v] قلم وزیرمتن نصب و ثبت گردید."
             FontNotDetected      = "[!] هشدار: قلم وزیرمتن (Vazirmatn) در فونت‌های ویندوز یافت نشد."
             FontInstallGuide     = "    پیشنهاد می‌شود جهت زیبایی بیشتر، فونت Vazirmatn را نصب فرمایید."
-            StatusHeader         = "=== وضعیت فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE - ویندوز) ==="
+            StatusHeader         = "=== وضعیت فارسی ساز آنتی گرویتی (PersianAntigravity - ویندوز) ==="
             StatusAppDir         = "  مسیر برنامه:        {0}"
             StatusUserCfg        = "  تنظیمات کاربر:      {0}"
             StatusWorkbenchCss   = "  استایل CSS محیط:    {0}"
@@ -104,7 +104,7 @@ function Setup-PersianAntigravityIDE {
             AppRestoreOk         = "[v] نرم‌افزار Antigravity App از نسخه پشتیبان بازگردانی شد."
             StatusAppAsar        = "  Antigravity App:    {0}"
             NeedNodeAsar         = "[!] برای پچ کردن Antigravity App ابزار npx و Node.js نیاز است."
-            UninstHeader         = "=== بازگردانی تغییرات فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE - ویندوز) ==="
+            UninstHeader         = "=== بازگردانی تغییرات فارسی ساز آنتی گرویتی (PersianAntigravity - ویندوز) ==="
             UninstRestoredHtml   = "[v] فایل workbench.html از نسخه پشتیبان بازگردانی شد."
             UninstRemovedHtmlTag = "[v] تگ‌های راست‌چین از workbench.html حذف گردید."
             UninstRemovedCss     = "[v] فایل antigravity-chat-rtl.css حذف شد."
@@ -113,9 +113,9 @@ function Setup-PersianAntigravityIDE {
             UninstRemovedMdCss   = "[v] فایل markdown-rtl.css حذف شد."
             UninstCleanedMdStyle = "[v] استایل‌های مارک‌داون از settings.json پاکسازی شد."
             UninstWarningCfg     = "[!] هشدار هنگام به‌روزرسانی settings.json: {0}"
-            UninstDone           = "فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) با موفقیت حذف گردید."
-            UninstRestart        = "لطفاً جهت اعمال، نرم‌افزار Antigravity IDE را مجدداً راه‌اندازی (Restart) کنید."
-            InstHeader           = "=== در حال نصب فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE - ویندوز) ==="
+            UninstDone           = "فارسی ساز آنتی گرویتی (PersianAntigravity) با موفقیت حذف گردید."
+            UninstRestart        = "لطفاً جهت اعمال، برنامه را مجدداً راه‌اندازی (Restart) کنید."
+            InstHeader           = "=== در حال نصب فارسی ساز آنتی گرویتی (PersianAntigravity - ویندوز) ==="
             InstWriteCss         = "[*] در حال نوشتن فایل CSS محیط کاری -> {0}"
             InstWriteJs          = "[*] در حال نوشتن فایل JS محیط کاری -> {0}"
             InstPatchHtml        = "[*] در حال پچ کردن فایل {0}"
@@ -128,8 +128,8 @@ function Setup-PersianAntigravityIDE {
             InstNoticeProd       = "[!] هشدار در product.json: {0}"
             InstConfigMd         = "[*] در حال تنظیم پیش‌نمایش مارک‌داون..."
             InstMdSuccess        = "[v] استایل‌ها و تنظیمات مارک‌داون راست‌چین ذخیره شد."
-            InstSuccess          = "فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE) با موفقیت اعمال شد!"
-            InstRestart          = "لطفاً نرم‌افزار Antigravity IDE را ببندید و دوباره باز کنید تا تغییرات اعمال گردند."
+            InstSuccess          = "فارسی ساز آنتی گرویتی (PersianAntigravity) با موفقیت اعمال شد!"
+            InstRestart          = "لطفاً برنامه را ببندید و دوباره باز کنید تا تغییرات اعمال گردند."
             ProxyHeader          = "=== ایجاد میانبر لانچر پروکسی Antigravity IDE ==="
             ProxyScriptCreated   = "[v] اسکریپت لانچر پروکسی ایجاد گردید در: {0}"
             ProxyDesktopCreated  = "[v] میانبر دسکتاپ ایجاد شد: {0}"
@@ -158,7 +158,7 @@ function Setup-PersianAntigravityIDE {
             FontInstalled        = "[v] Vazirmatn font installed and registered."
             FontNotDetected      = "[!] Warning: Vazirmatn font is not detected in Windows Fonts."
             FontInstallGuide     = "    Please install Vazirmatn font (e.g. from Google Fonts or GitHub)."
-            StatusHeader         = "=== PersianAntigravityIDE Status (Windows) ==="
+            StatusHeader         = "=== PersianAntigravity Status (Windows) ==="
             StatusAppDir         = "  App Directory:    {0}"
             StatusUserCfg        = "  User Config:      {0}"
             StatusWorkbenchCss   = "  Workbench CSS:    {0}"
@@ -179,7 +179,7 @@ function Setup-PersianAntigravityIDE {
             AppRestoreOk         = "[v] Antigravity App restored from original backup."
             StatusAppAsar        = "  Antigravity App:    {0}"
             NeedNodeAsar         = "[!] Node.js and npx are required to patch Antigravity App."
-            UninstHeader         = "=== Reverting PersianAntigravityIDE Setup (Windows) ==="
+            UninstHeader         = "=== Reverting PersianAntigravity Setup (Windows) ==="
             UninstRestoredHtml   = "[v] Restored workbench.html from backup."
             UninstRemovedHtmlTag = "[v] Removed RTL tags from workbench.html."
             UninstRemovedCss     = "[v] Removed antigravity-chat-rtl.css."
@@ -188,9 +188,9 @@ function Setup-PersianAntigravityIDE {
             UninstRemovedMdCss   = "[v] Removed markdown-rtl.css."
             UninstCleanedMdStyle = "[v] Cleaned up markdown styles from settings.json."
             UninstWarningCfg     = "[!] Warning updating settings.json: {0}"
-            UninstDone           = "PersianAntigravityIDE uninstalled cleanly."
-            UninstRestart        = "Please restart Antigravity IDE."
-            InstHeader           = "=== Installing PersianAntigravityIDE (Windows) ==="
+            UninstDone           = "PersianAntigravity uninstalled cleanly."
+            UninstRestart        = "Please restart Antigravity."
+            InstHeader           = "=== Installing PersianAntigravity (Windows) ==="
             InstWriteCss         = "[*] Writing workbench CSS -> {0}"
             InstWriteJs          = "[*] Writing workbench JS -> {0}"
             InstPatchHtml        = "[*] Patching {0}"
@@ -203,8 +203,8 @@ function Setup-PersianAntigravityIDE {
             InstNoticeProd       = "[!] Notice on product.json: {0}"
             InstConfigMd         = "[*] Configuring user Markdown preview..."
             InstMdSuccess        = "[v] Markdown RTL preview styles & settings configured."
-            InstSuccess          = "PersianAntigravityIDE and Vazirmatn successfully installed!"
-            InstRestart          = "Please restart Antigravity IDE to apply all visual changes."
+            InstSuccess          = "PersianAntigravity and Vazirmatn successfully installed!"
+            InstRestart          = "Please restart Antigravity to apply all visual changes."
             ProxyHeader          = "=== Setting up Antigravity IDE Proxy Launcher ==="
             ProxyScriptCreated   = "[v] Proxy launcher script installed at: {0}"
             ProxyDesktopCreated  = "[v] Desktop shortcut created: {0}"
@@ -621,12 +621,18 @@ li:dir(rtl) {
         $preloadFile = Join-Path $tmpExtract "dist\preload.js"
         if (Test-Path -LiteralPath $preloadFile) {
             $preloadContent = [System.IO.File]::ReadAllText($preloadFile, [System.Text.Encoding]::UTF8)
-            $markerStart = '// ==PersianAntigravityIDE-Injection-Start=='
-            $markerEnd   = '// ==PersianAntigravityIDE-Injection-End=='
+            $markerStart = '// ==PersianAntigravity-Injection-Start=='
+            $markerEnd   = '// ==PersianAntigravity-Injection-End=='
 
             if ($preloadContent.Contains($markerStart)) {
                 $p1 = $preloadContent.Substring(0, $preloadContent.IndexOf($markerStart))
                 $p2 = $preloadContent.Substring($preloadContent.IndexOf($markerEnd) + $markerEnd.Length)
+                $preloadContent = $p1 + $p2
+            } elseif ($preloadContent.Contains('// ==PersianAntigravityIDE-Injection-Start==')) {
+                $oldStart = '// ==PersianAntigravityIDE-Injection-Start=='
+                $oldEnd   = '// ==PersianAntigravityIDE-Injection-End=='
+                $p1 = $preloadContent.Substring(0, $preloadContent.IndexOf($oldStart))
+                $p2 = $preloadContent.Substring($preloadContent.IndexOf($oldEnd) + $oldEnd.Length)
                 $preloadContent = $p1 + $p2
             }
 
@@ -999,10 +1005,11 @@ $markerEnd
 }
 
 # Alias for seamless usage
-Set-Alias -Name setup-persian-antigravity-ide -Value Setup-PersianAntigravityIDE -Scope Global -ErrorAction SilentlyContinue
-Set-Alias -Name setup-antigravity-rtl -Value Setup-PersianAntigravityIDE -Scope Global -ErrorAction SilentlyContinue
+Set-Alias -Name setup-persian-antigravity -Value Setup-PersianAntigravity -Scope Global -ErrorAction SilentlyContinue
+Set-Alias -Name setup-persian-antigravity-ide -Value Setup-PersianAntigravity -Scope Global -ErrorAction SilentlyContinue
+Set-Alias -Name setup-antigravity-rtl -Value Setup-PersianAntigravity -Scope Global -ErrorAction SilentlyContinue
 
 # If executed directly as a script or via pipeline/iex (not dot-sourced)
 if ($MyInvocation.InvocationName -ne '.') {
-    Setup-PersianAntigravityIDE @args
+    Setup-PersianAntigravity @args
 }

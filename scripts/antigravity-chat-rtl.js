@@ -1,7 +1,7 @@
 /* ==============================================================================
- * PersianAntigravityIDE - فارسی ساز محیط توسعه آنتی گرویتی
- * Project: https://github.com/mehdichamani/PersianAntigravityIDE
- * Target:  Antigravity IDE Workbench DOM (MutationObserver)
+ * PersianAntigravity - فارسی ساز آنتی گرویتی
+ * Project: https://github.com/mehdichamani/PersianAntigravity
+ * Target:  Antigravity IDE & Antigravity App DOM (MutationObserver)
  * ============================================================================== */
 
 (function() {
