@@ -34,7 +34,25 @@
             '.jetski-custom-editor-pane h4',
             '.jetski-custom-editor-pane h5',
             '.jetski-custom-editor-pane h6',
-            '.jetski-custom-editor-pane blockquote'
+            '.jetski-custom-editor-pane blockquote',
+            // Antigravity App broad & chat selectors
+            '.leading-relaxed.select-text p',
+            '.leading-relaxed.select-text li',
+            '.leading-relaxed.select-text ol',
+            '.leading-relaxed.select-text ul',
+            '.leading-relaxed.select-text h1',
+            '.leading-relaxed.select-text h2',
+            '.leading-relaxed.select-text h3',
+            '.leading-relaxed.select-text h4',
+            '.leading-relaxed.select-text blockquote',
+            '.whitespace-pre-wrap.text-sm',
+            '[data-testid="message-content"] p',
+            '[data-testid="message-content"] li',
+            '.antigravity-app p',
+            '.antigravity-app li',
+            'main p',
+            'main li',
+            'main blockquote'
         ].join(', ');
 
         var elements = document.querySelectorAll(selectors);

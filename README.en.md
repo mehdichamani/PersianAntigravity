@@ -65,20 +65,28 @@ cd ~/projects/PersianAntigravityIDE
 ### Linux / macOS (`setup.sh`)
 
 ```bash
-# Check current installation status
+# Check current installation status (both Antigravity IDE and App)
 ./setup.sh status
 
-# Install / Apply patches
+# Install / Apply patches to all targets (IDE & App)
 ./setup.sh install
+
+# Target Antigravity App specifically
+./setup.sh install --target=app
+
+# Target Antigravity IDE specifically
+./setup.sh install --target=ide
 
 # Setup 'antigravity-proxy' command and Desktop shortcut
 ./setup.sh proxy
 
 # Uninstall / Restore original state
 ./setup.sh uninstall
+# Or restore App specifically:
+./setup.sh uninstall --target=app
 ```
 
-> **Note on Permissions:** Core Antigravity IDE files on Linux reside in `/opt/antigravity-ide/`. The script automatically prompts for `sudo` elevation only when modifying system files.
+> **Note on Permissions:** Core Antigravity IDE files on Linux reside in `/opt/antigravity-ide/`. The script automatically prompts for `sudo` elevation only when modifying system files; patching Antigravity App in the user directory requires no sudo.
 
 ### Windows (`setup.ps1`)
 
@@ -86,8 +94,11 @@ cd ~/projects/PersianAntigravityIDE
 # Check current status
 pwsh -File ./setup.ps1 -Status
 
-# Install / Apply patches
+# Install / Apply patches to all targets
 pwsh -File ./setup.ps1 -Install
+
+# Target Antigravity App specifically
+pwsh -File ./setup.ps1 -Install -Target app
 
 # Setup Desktop shortcut with automatic System Proxy injection
 pwsh -File ./setup.ps1 -ProxyLauncher

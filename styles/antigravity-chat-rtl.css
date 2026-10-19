@@ -25,7 +25,19 @@
 .jetski-custom-editor-pane li,
 .jetski-custom-editor-pane h1,
 .jetski-custom-editor-pane h2,
-.jetski-custom-editor-pane h3 {
+.jetski-custom-editor-pane h3,
+.antigravity-app,
+.antigravity-app [contenteditable="true"],
+.leading-relaxed.select-text,
+.leading-relaxed.select-text p,
+.leading-relaxed.select-text li,
+.leading-relaxed.select-text h1,
+.leading-relaxed.select-text h2,
+.leading-relaxed.select-text h3,
+.leading-relaxed.select-text h4,
+.leading-relaxed.select-text blockquote,
+.whitespace-pre-wrap,
+.antigravity-is-rtl {
     font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
 }
 
@@ -65,7 +77,11 @@
 /* Smart bidirectional input for user messages in chat prompt */
 .antigravity-agent-side-panel textarea,
 .antigravity-agent-side-panel input,
-.antigravity-agent-side-panel [contenteditable="true"] {
+.antigravity-agent-side-panel [contenteditable="true"],
+.antigravity-app textarea,
+.antigravity-app input,
+.antigravity-app [contenteditable="true"],
+[contenteditable="true"] {
     unicode-bidi: plaintext !important;
     text-align: start !important;
 }

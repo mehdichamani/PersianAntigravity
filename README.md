@@ -86,20 +86,28 @@ cd ~/projects/PersianAntigravityIDE
 ### در لینوکس و مک (`setup.sh`)
 
 ```bash
-# بررسی وضعیت فعلی نصب
+# بررسی وضعیت فعلی نصب (هم Antigravity IDE و هم Antigravity App)
 ./setup.sh status
 
-# اجرای فرآیند نصب و اعمال پچ‌ها
+# اجرای فرآیند نصب برای هر دو محیط (IDE و App به صورت پیش‌فرض)
 ./setup.sh install
+
+# نصب اختصاصی فقط روی Antigravity App
+./setup.sh install --target=app
+
+# نصب اختصاصی فقط روی Antigravity IDE
+./setup.sh install --target=ide
 
 # ایجاد میانبر لانچر با پروکسی سیستم
 ./setup.sh proxy
 
 # حذف کامل پچ‌ها و بازگردانی وضعیت به نسخه اصلی
 ./setup.sh uninstall
+# یا بازگردانی اختصاصی:
+./setup.sh uninstall --target=app
 ```
 
-> 💡 *در لینوکس، اسکریپت تنها برای ذخیره فایل‌ها در دایرکتوری `/opt/antigravity-ide/` از شما دسترسی `sudo` خواهد خواست.*
+> 💡 *در لینوکس، اسکریپت تنها برای ذخیره فایل‌ها در دایرکتوری‌های سیستمی مانند `/opt/antigravity-ide/` از شما دسترسی `sudo` خواهد خواست؛ پچ کردن Antigravity App مستقر در دایرکتوری کاربر بدون نیاز به sudo انجام می‌شود.*
 
 ### در ویندوز (`setup.ps1`)
 
@@ -107,8 +115,11 @@ cd ~/projects/PersianAntigravityIDE
 # بررسی وضعیت فعلی
 pwsh -File ./setup.ps1 -Status
 
-# نصب و اعمال پچ‌ها
+# نصب و اعمال پچ‌ها برای هر دو محیط
 pwsh -File ./setup.ps1 -Install
+
+# نصب فقط برای Antigravity App
+pwsh -File ./setup.ps1 -Install -Target app
 
 # ایجاد میانبر لانچر دسکتاپ با پروکسی خودکار سیستم
 pwsh -File ./setup.ps1 -ProxyLauncher

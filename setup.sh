@@ -30,6 +30,7 @@ fi
 # Language Selection (Interactive Persian test / Terminal compatibility)
 LANG_CHOICE=""
 FILTERED_ARGS=()
+TARGET_CHOICE="all"
 for arg in "$@"; do
     case "$arg" in
         --lang=fa|-lang=fa|--fa)
@@ -37,6 +38,15 @@ for arg in "$@"; do
             ;;
         --lang=en|-lang=en|--en)
             LANG_CHOICE="en"
+            ;;
+        --target=*)
+            TARGET_CHOICE="${arg#*=}"
+            ;;
+        --ide-only)
+            TARGET_CHOICE="ide"
+            ;;
+        --app-only)
+            TARGET_CHOICE="app"
             ;;
         *)
             FILTERED_ARGS+=("$arg")
@@ -157,6 +167,15 @@ if [[ "$LANG_CHOICE" == "fa" ]]; then
     M[STATUS_BYPASS_PENDING]="غیرفعال / در انتظار"
     M[STATUS_CONFIGURED]="پیکربندی شده"
     M[STATUS_NOT_CONFIGURED]="پیکربندی نشده"
+    M[APP_NOT_FOUND_WARN]="[!] نرم‌افزار Antigravity App یافت نشد (اختیاری)."
+    M[APP_PATCHING]="[*] در حال پچ کردن Antigravity App (app.asar)..."
+    M[APP_EXTRACTING]="[*] در حال استخراج app.asar با @electron/asar..."
+    M[APP_PACKING]="[*] در حال بسته‌بندی مجدد app.asar..."
+    M[APP_PATCHED_OK]="[✓] نرم‌افزار Antigravity App با موفقیت پچ شد."
+    M[APP_RESTORE_OK]="[✓] نرم‌افزار Antigravity App از نسخه پشتیبان بازگردانی شد."
+    M[STATUS_APP_ASAR]="  Antigravity App:    "
+    M[NEED_NODE_ASAR]="[!] برای پچ کردن Antigravity App ابزار npx و Node.js نیاز است."
+
 else
     M[ERR_APP_DIR]="\n[✗] Error: Antigravity IDE 'resources/app' directory could not be found!"
     M[ERR_PATH_DET]="    The 'antigravity-ide' command was not found in your PATH, and default directories were missing.\n"
@@ -225,6 +244,15 @@ else
     M[STATUS_BYPASS_PENDING]="Pending / Not Bypassed"
     M[STATUS_CONFIGURED]="Configured"
     M[STATUS_NOT_CONFIGURED]="Not Configured"
+    M[APP_NOT_FOUND_WARN]="[!] Antigravity App not found (optional)."
+    M[APP_PATCHING]="[*] Patching Antigravity App (app.asar)..."
+    M[APP_EXTRACTING]="[*] Extracting app.asar via @electron/asar..."
+    M[APP_PACKING]="[*] Repacking app.asar..."
+    M[APP_PATCHED_OK]="[✓] Antigravity App successfully patched."
+    M[APP_RESTORE_OK]="[✓] Antigravity App restored from original backup."
+    M[STATUS_APP_ASAR]="  Antigravity App:    "
+    M[NEED_NODE_ASAR]="[!] Node.js and npx are required to patch Antigravity App."
+
 fi
 
 # Resolve real user and home directory (handles execution directly or through sudo)
@@ -233,6 +261,29 @@ REAL_HOME=$(getent passwd "$REAL_USER" 2>/dev/null | cut -d: -f6 || echo "${HOME
 if [[ -z "$REAL_HOME" || ! -d "$REAL_HOME" ]]; then
     REAL_HOME="${HOME:-/root}"
 fi
+
+# Locate Antigravity Desktop App (resources/app.asar)
+ANTIGRAVITY_APP_ASAR=""
+find_antigravity_app() {
+    if [[ -n "${ANTIGRAVITY_APP_PATH:-}" && -f "$ANTIGRAVITY_APP_PATH" ]]; then
+        ANTIGRAVITY_APP_ASAR="$ANTIGRAVITY_APP_PATH"
+        return 0
+    fi
+    local app_candidates=(
+        "$REAL_HOME/.local/share/Antigravity/resources/app.asar"
+        "/opt/Antigravity/resources/app.asar"
+        "/usr/lib/Antigravity/resources/app.asar"
+        "/Applications/Antigravity.app/Contents/Resources/app.asar"
+    )
+    for c in "${app_candidates[@]}"; do
+        if [[ -f "$c" ]]; then
+            ANTIGRAVITY_APP_ASAR="$c"
+            return 0
+        fi
+    done
+    return 1
+}
+find_antigravity_app || true
 
 # Locate Antigravity IDE application directory
 APP_DIR=""
@@ -618,6 +669,141 @@ else:
     echo -e "${GREEN}${M[CHK_BYPASSED]}${NC}"
 }
 
+# ------------------------------------------------------------------------------
+# Antigravity App (app.asar) Management
+# ------------------------------------------------------------------------------
+patch_antigravity_app() {
+    if [[ -z "$ANTIGRAVITY_APP_ASAR" || ! -f "$ANTIGRAVITY_APP_ASAR" ]]; then
+        echo -e "${YELLOW}${M[APP_NOT_FOUND_WARN]}${NC}"
+        return 0
+    fi
+
+    if ! command -v npx &>/dev/null; then
+        echo -e "${RED}${M[NEED_NODE_ASAR]}${NC}"
+        return 1
+    fi
+
+    local asar_path="$ANTIGRAVITY_APP_ASAR"
+    local backup_path="$asar_path.original"
+
+    echo -e "${BOLD}${BLUE}${M[APP_PATCHING]}${NC}"
+    echo -e "    Target: ${CYAN}$asar_path${NC}"
+
+    if [[ ! -f "$backup_path" ]]; then
+        cp -f "$asar_path" "$backup_path"
+        echo -e "${BLUE}${M[BACKUP_CREATED]}$backup_path${NC}"
+    fi
+
+    local tmp_extract
+    tmp_extract="$(mktemp -d /tmp/antigravity-asar.XXXXXX)"
+    echo -e "${CYAN}${M[APP_EXTRACTING]}${NC}"
+    if ! npx -y @electron/asar extract "$asar_path" "$tmp_extract"; then
+        echo -e "${RED}[✗] Failed to extract app.asar${NC}"
+        rm -rf "$tmp_extract"
+        return 1
+    fi
+
+    local preload_file="$tmp_extract/dist/preload.js"
+    if [[ ! -f "$preload_file" ]]; then
+        echo -e "${RED}[✗] preload.js not found in extracted app.asar${NC}"
+        rm -rf "$tmp_extract"
+        return 1
+    fi
+
+    local css_file="$SCRIPT_DIR/styles/antigravity-chat-rtl.css"
+    local js_file="$SCRIPT_DIR/scripts/antigravity-chat-rtl.js"
+    local css_content=""
+    local js_content=""
+
+    if [[ -f "$css_file" ]]; then
+        css_content="$(cat "$css_file")"
+    fi
+    if [[ -f "$js_file" ]]; then
+        js_content="$(cat "$js_file")"
+    fi
+
+    node -e '
+const fs = require("fs");
+const preloadPath = process.argv[1];
+const cssText = process.argv[2];
+const jsText = process.argv[3];
+
+let content = fs.readFileSync(preloadPath, "utf8");
+const markerStart = "// ==PersianAntigravityIDE-Injection-Start==";
+const markerEnd = "// ==PersianAntigravityIDE-Injection-End==";
+
+if (content.includes(markerStart)) {
+    const p1 = content.split(markerStart)[0];
+    const p2 = content.split(markerEnd)[1];
+    content = p1 + p2;
+}
+
+const snippet = `
+${markerStart}
+(function() {
+    function injectPersianStyles() {
+        try {
+            if (!document.head) return;
+            if (document.getElementById("persian-antigravity-rtl-style")) return;
+
+            var style = document.createElement("style");
+            style.id = "persian-antigravity-rtl-style";
+            style.textContent = ${JSON.stringify(cssText)};
+            document.head.appendChild(style);
+
+            var script = document.createElement("script");
+            script.id = "persian-antigravity-rtl-script";
+            script.textContent = ${JSON.stringify(jsText)};
+            document.head.appendChild(script);
+        } catch(e) {
+            console.error("[PersianAntigravity] Injection error:", e);
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", injectPersianStyles);
+    } else {
+        injectPersianStyles();
+    }
+})();
+${markerEnd}
+`;
+
+content = content.trim() + "\n" + snippet;
+fs.writeFileSync(preloadPath, content, "utf8");
+' "$preload_file" "$css_content" "$js_content"
+
+    echo -e "${CYAN}${M[APP_PACKING]}${NC}"
+    local pack_args=("--unpack-dir" "node_modules/chrome-devtools-mcp")
+    local tmp_asar
+    tmp_asar="$(mktemp /tmp/antigravity-repack.XXXXXX.asar)"
+
+    if npx -y @electron/asar pack "$tmp_extract" "$tmp_asar" "${pack_args[@]}"; then
+        mv -f "$tmp_asar" "$asar_path"
+        chmod 644 "$asar_path"
+        rm -rf "$tmp_extract" "$tmp_asar"
+        echo -e "${GREEN}${M[APP_PATCHED_OK]}${NC}"
+    else
+        echo -e "${RED}[✗] Failed to repack app.asar${NC}"
+        rm -rf "$tmp_extract" "$tmp_asar"
+        return 1
+    fi
+}
+
+unpatch_antigravity_app() {
+    if [[ -z "$ANTIGRAVITY_APP_ASAR" || ! -f "$ANTIGRAVITY_APP_ASAR" ]]; then
+        return 0
+    fi
+    local asar_path="$ANTIGRAVITY_APP_ASAR"
+    local backup_path="$asar_path.original"
+
+    if [[ -f "$backup_path" ]]; then
+        cp -f "$backup_path" "$asar_path"
+        rm -f "$backup_path"
+        echo -e "${GREEN}${M[APP_RESTORE_OK]}${NC}"
+    fi
+}
+
 setup_markdown_preview() {
     echo -e "${CYAN}${M[CFG_MD]}${NC}"
     mkdir -p "$USER_CONFIG_DIR"
@@ -686,22 +872,29 @@ with open(settings_path, 'w', encoding='utf-8') as f:
 }
 
 do_install() {
-    ensure_root "$@"
-    echo -e "${BOLD}${BLUE}${M[INST_HEADER]}${NC}"
     check_fonts
-    write_css_file
-    write_js_file
-    patch_workbench_html
-    patch_product_json
-    setup_markdown_preview
-    echo ""
-    echo -e "${BOLD}${GREEN}${M[INST_SUCCESS]}${NC}"
-    echo -e "${CYAN}${M[INST_RESTART]}${NC}"
+    if [[ "$TARGET_CHOICE" == "all" || "$TARGET_CHOICE" == "ide" ]]; then
+        ensure_root "$@"
+        echo -e "${BOLD}${BLUE}${M[INST_HEADER]}${NC}"
+        write_css_file
+        write_js_file
+        patch_workbench_html
+        patch_product_json
+        setup_markdown_preview
+        echo ""
+        echo -e "${BOLD}${GREEN}${M[INST_SUCCESS]}${NC}"
+        echo -e "${CYAN}${M[INST_RESTART]}${NC}"
+    fi
+
+    if [[ "$TARGET_CHOICE" == "all" || "$TARGET_CHOICE" == "app" ]]; then
+        patch_antigravity_app
+    fi
 }
 
 do_uninstall() {
-    ensure_root "$@"
-    echo -e "${BOLD}${YELLOW}${M[UNINST_HEADER]}${NC}"
+    if [[ "$TARGET_CHOICE" == "all" || "$TARGET_CHOICE" == "ide" ]]; then
+        ensure_root "$@"
+        echo -e "${BOLD}${YELLOW}${M[UNINST_HEADER]}${NC}"
 
     # Restore workbench.html
     if [[ -f "$HTML_FILE" ]]; then
@@ -764,6 +957,11 @@ if os.path.exists(settings_path):
     echo ""
     echo -e "${BOLD}${GREEN}${M[UNINST_SUCCESS]}${NC}"
     echo -e "${CYAN}${M[UNINST_RESTART]}${NC}"
+    fi
+
+    if [[ "$TARGET_CHOICE" == "all" || "$TARGET_CHOICE" == "app" ]]; then
+        unpatch_antigravity_app
+    fi
 }
 
 do_status() {
@@ -817,6 +1015,16 @@ except:
         echo -e "${M[STATUS_MD]}${GREEN}${M[STATUS_CONFIGURED]}${NC}"
     else
         echo -e "${M[STATUS_MD]}${YELLOW}${M[STATUS_NOT_CONFIGURED]}${NC}"
+    fi
+
+    if [[ -n "$ANTIGRAVITY_APP_ASAR" && -f "$ANTIGRAVITY_APP_ASAR" ]]; then
+        if [[ -f "$ANTIGRAVITY_APP_ASAR.original" ]]; then
+            echo -e "${M[STATUS_APP_ASAR]}${GREEN}${M[STATUS_PATCHED]}${NC} ($ANTIGRAVITY_APP_ASAR)"
+        else
+            echo -e "${M[STATUS_APP_ASAR]}${YELLOW}${M[STATUS_NOT_PATCHED]}${NC} ($ANTIGRAVITY_APP_ASAR)"
+        fi
+    else
+        echo -e "${M[STATUS_APP_ASAR]}${RED}${M[STATUS_MISSING]}${NC}"
     fi
 }
 
@@ -907,7 +1115,7 @@ case "$cmd" in
         do_proxy
         ;;
     help|--help|-h)
-        echo "Usage: $(basename "$0") [install|uninstall|status|proxy|help] [--lang=fa|--lang=en]"
+        echo "Usage: $(basename "$0") [install|uninstall|status|proxy|help] [--lang=fa|--lang=en] [--target=all|ide|app]"
         echo ""
         echo "Commands:"
         echo "  install    Install RTL CSS, JS, workbench patches and Vazirmatn font styling (default)"
@@ -922,7 +1130,7 @@ case "$cmd" in
         ;;
     *)
         echo -e "${RED}Unknown command: $cmd${NC}"
-        echo "Usage: $(basename "$0") [install|uninstall|status|proxy|help] [--lang=fa|--lang=en]"
+        echo "Usage: $(basename "$0") [install|uninstall|status|proxy|help] [--lang=fa|--lang=en] [--target=all|ide|app]"
         exit 1
         ;;
 esac

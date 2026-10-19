@@ -28,7 +28,11 @@ function Setup-PersianAntigravityIDE {
         [string]$Lang,
 
         [Parameter()]
-        [string]$AppDir
+        [string]$AppDir,
+
+        [Parameter()]
+        [ValidateSet('all', 'ide', 'app')]
+        [string]$Target = 'all'
     )
 
     $ErrorActionPreference = 'Stop'
@@ -92,6 +96,14 @@ function Setup-PersianAntigravityIDE {
             StatusMarkdown       = "  پیش‌نمایش مارک‌داون:  {0}"
             StatusConfigured     = "پیکربندی شده"
             StatusNotConfigured  = "پیکربندی نشده"
+            AppNotFoundWarn      = "[!] نرم‌افزار Antigravity App یافت نشد (اختیاری)."
+            AppPatching          = "[*] در حال پچ کردن Antigravity App (app.asar)..."
+            AppExtracting        = "[*] در حال استخراج app.asar با @electron/asar..."
+            AppPacking           = "[*] در حال بسته‌بندی مجدد app.asar..."
+            AppPatchedOk         = "[v] نرم‌افزار Antigravity App با موفقیت پچ شد."
+            AppRestoreOk         = "[v] نرم‌افزار Antigravity App از نسخه پشتیبان بازگردانی شد."
+            StatusAppAsar        = "  Antigravity App:    {0}"
+            NeedNodeAsar         = "[!] برای پچ کردن Antigravity App ابزار npx و Node.js نیاز است."
             UninstHeader         = "=== بازگردانی تغییرات فارسی ساز محیط توسعه آنتی گرویتی (PersianAntigravityIDE - ویندوز) ==="
             UninstRestoredHtml   = "[v] فایل workbench.html از نسخه پشتیبان بازگردانی شد."
             UninstRemovedHtmlTag = "[v] تگ‌های راست‌چین از workbench.html حذف گردید."
@@ -159,6 +171,14 @@ function Setup-PersianAntigravityIDE {
             StatusMarkdown       = "  Markdown Preview: {0}"
             StatusConfigured     = "Configured"
             StatusNotConfigured  = "Not Configured"
+            AppNotFoundWarn      = "[!] Antigravity App not found (optional)."
+            AppPatching          = "[*] Patching Antigravity App (app.asar)..."
+            AppExtracting        = "[*] Extracting app.asar via @electron/asar..."
+            AppPacking           = "[*] Repacking app.asar..."
+            AppPatchedOk         = "[v] Antigravity App successfully patched."
+            AppRestoreOk         = "[v] Antigravity App restored from original backup."
+            StatusAppAsar        = "  Antigravity App:    {0}"
+            NeedNodeAsar         = "[!] Node.js and npx are required to patch Antigravity App."
             UninstHeader         = "=== Reverting PersianAntigravityIDE Setup (Windows) ==="
             UninstRestoredHtml   = "[v] Restored workbench.html from backup."
             UninstRemovedHtmlTag = "[v] Removed RTL tags from workbench.html."
@@ -554,6 +574,121 @@ li:dir(rtl) {
 '@
     }
 
+
+    # Locate Antigravity Desktop App (resources\app.asar) on Windows
+    $appAsarPath = $null
+    $appCandidates = @(
+        "$env:LOCALAPPDATA\Programs\Antigravity\resources\app.asar",
+        "$env:ProgramFiles\Antigravity\resources\app.asar",
+        "$env:USERPROFILE\.local\share\Antigravity\resources\app.asar"
+    )
+    foreach ($ac in $appCandidates) {
+        if (Test-Path -LiteralPath $ac) {
+            $appAsarPath = $ac
+            break
+        }
+    }
+
+    function Patch-AntigravityApp {
+        if (-not $appAsarPath -or -not (Test-Path -LiteralPath $appAsarPath)) {
+            Write-Host $M.AppNotFoundWarn -ForegroundColor Yellow
+            return
+        }
+        $npxCmd = Get-Command "npx" -ErrorAction SilentlyContinue
+        if (-not $npxCmd) {
+            Write-Host $M.NeedNodeAsar -ForegroundColor Red
+            return
+        }
+
+        Write-Host $M.AppPatching -ForegroundColor Cyan
+        Write-Host "    Target: $appAsarPath" -ForegroundColor DarkCyan
+
+        $backupPath = "$appAsarPath.original"
+        if (-not (Test-Path -LiteralPath $backupPath)) {
+            Copy-Item -LiteralPath $appAsarPath -Destination $backupPath -Force
+            Write-Host ($M.InstBackupHtml -f $backupPath) -ForegroundColor DarkCyan
+        }
+
+        $tmpExtract = Join-Path $env:TEMP ("antigravity-asar-" + [System.Guid]::NewGuid().ToString("N"))
+        Write-Host $M.AppExtracting -ForegroundColor Cyan
+        & npx -y @electron/asar extract "$appAsarPath" "$tmpExtract"
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "[X] Failed to extract app.asar" -ForegroundColor Red
+            Remove-Item -LiteralPath $tmpExtract -Recurse -Force -ErrorAction SilentlyContinue
+            return
+        }
+
+        $preloadFile = Join-Path $tmpExtract "dist\preload.js"
+        if (Test-Path -LiteralPath $preloadFile) {
+            $preloadContent = [System.IO.File]::ReadAllText($preloadFile, [System.Text.Encoding]::UTF8)
+            $markerStart = '// ==PersianAntigravityIDE-Injection-Start=='
+            $markerEnd   = '// ==PersianAntigravityIDE-Injection-End=='
+
+            if ($preloadContent.Contains($markerStart)) {
+                $p1 = $preloadContent.Substring(0, $preloadContent.IndexOf($markerStart))
+                $p2 = $preloadContent.Substring($preloadContent.IndexOf($markerEnd) + $markerEnd.Length)
+                $preloadContent = $p1 + $p2
+            }
+
+            $jsonCss = $cssContent | ConvertTo-Json
+            $jsonJs  = $jsContent | ConvertTo-Json
+
+            $injectionSnippet = @"
+
+$markerStart
+(function() {
+    function injectPersianStyles() {
+        try {
+            if (!document.head) return;
+            if (document.getElementById('persian-antigravity-rtl-style')) return;
+
+            var style = document.createElement('style');
+            style.id = 'persian-antigravity-rtl-style';
+            style.textContent = $jsonCss;
+            document.head.appendChild(style);
+
+            var script = document.createElement('script');
+            script.id = 'persian-antigravity-rtl-script';
+            script.textContent = $jsonJs;
+            document.head.appendChild(script);
+        } catch(e) {
+            console.error('[PersianAntigravity] Injection error:', e);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', injectPersianStyles);
+    } else {
+        injectPersianStyles();
+    }
+})();
+$markerEnd
+"@
+            $newPreload = $preloadContent.Trim() + "`r`n" + $injectionSnippet
+            [System.IO.File]::WriteAllText($preloadFile, $newPreload, [System.Text.Encoding]::UTF8)
+        }
+
+        Write-Host $M.AppPacking -ForegroundColor Cyan
+        $tmpAsar = Join-Path $env:TEMP ("antigravity-repack-" + [System.Guid]::NewGuid().ToString("N") + ".asar")
+        & npx -y @electron/asar pack "$tmpExtract" "$tmpAsar" --unpack-dir "node_modules/chrome-devtools-mcp"
+        if ($LASTEXITCODE -eq 0 -and (Test-Path -LiteralPath $tmpAsar)) {
+            Move-Item -LiteralPath $tmpAsar -Destination $appAsarPath -Force
+            Remove-Item -LiteralPath $tmpExtract -Recurse -Force -ErrorAction SilentlyContinue
+            Write-Host $M.AppPatchedOk -ForegroundColor Green
+        } else {
+            Write-Host "[X] Failed to repack app.asar" -ForegroundColor Red
+            Remove-Item -LiteralPath $tmpExtract -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+
+    function Unpatch-AntigravityApp {
+        if ($appAsarPath -and (Test-Path -LiteralPath "$appAsarPath.original")) {
+            Copy-Item -LiteralPath "$appAsarPath.original" -Destination $appAsarPath -Force
+            Remove-Item -LiteralPath "$appAsarPath.original" -Force
+            Write-Host $M.AppRestoreOk -ForegroundColor Green
+        }
+    }
+
     # --- STATUS ACTION ---
     if ($Status) {
         Write-Host $M.StatusHeader -ForegroundColor Cyan
@@ -594,6 +729,16 @@ li:dir(rtl) {
             Write-Host ($M.StatusMarkdown -f $M.StatusConfigured) -ForegroundColor Green
         } else {
             Write-Host ($M.StatusMarkdown -f $M.StatusNotConfigured) -ForegroundColor Yellow
+        }
+
+        if ($appAsarPath -and (Test-Path -LiteralPath $appAsarPath)) {
+            if (Test-Path -LiteralPath "$appAsarPath.original") {
+                Write-Host ($M.StatusAppAsar -f ($M.StatusPatched + " ($appAsarPath)")) -ForegroundColor Green
+            } else {
+                Write-Host ($M.StatusAppAsar -f ($M.StatusNotPatched + " ($appAsarPath)")) -ForegroundColor Yellow
+            }
+        } else {
+            Write-Host ($M.StatusAppAsar -f $M.StatusMissing) -ForegroundColor Red
         }
         return
     }
@@ -726,6 +871,9 @@ li:dir(rtl) {
             }
         }
 
+        if ($Target -eq 'all' -or $Target -eq 'app') {
+            Unpatch-AntigravityApp
+        }
         Write-Host ""
         Write-Host $M.UninstDone -ForegroundColor Green
         Write-Host $M.UninstRestart -ForegroundColor Cyan
@@ -842,6 +990,9 @@ li:dir(rtl) {
         Write-Host ($M.UninstWarningCfg -f $_) -ForegroundColor Yellow
     }
 
+    if ($Target -eq 'all' -or $Target -eq 'app') {
+        Patch-AntigravityApp
+    }
     Write-Host ""
     Write-Host $M.InstSuccess -ForegroundColor Green
     Write-Host $M.InstRestart -ForegroundColor Cyan
