@@ -430,11 +430,26 @@ public static extern int SendMessage(System.IntPtr hWnd, uint Msg, System.IntPtr
     padding-right: 2rem !important;
     padding-left: 2rem !important;
 }
+/* Force RTL and right-alignment for prompt input box and contenteditable fields */
 .antigravity-agent-side-panel textarea,
 .antigravity-agent-side-panel input,
-.antigravity-agent-side-panel [contenteditable="true"] {
-    unicode-bidi: plaintext !important;
-    text-align: start !important;
+.antigravity-agent-side-panel [contenteditable="true"],
+.antigravity-agent-side-panel [role="textbox"],
+.antigravity-agent-side-panel [role="combobox"],
+.antigravity-app textarea,
+.antigravity-app input,
+.antigravity-app [contenteditable="true"],
+.antigravity-app [role="textbox"],
+[contenteditable="true"],
+[aria-label="Message input"] {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+[aria-label="Message input"] ~ p,
+.pointer-events-none.absolute.left-2.right-2 {
+    direction: rtl !important;
+    text-align: right !important;
 }
 .antigravity-agent-side-panel pre,
 .antigravity-agent-side-panel code,
