@@ -26,41 +26,25 @@
 
 ---
 
-## 🚀 Quick Start (One-Liner Installation)
+## 🚀 Installation & Setup Guide
 
-### Linux & macOS
+### 1. Clone or Download Repository
 
-Run the installer via `curl`:
-
+#### Recommended (using Git):
 ```bash
-curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravity/main/setup.sh | bash
+git clone https://github.com/mehdichamani/PersianAntigravity.git
+cd PersianAntigravity
 ```
 
-> 💡 *Note:* If Antigravity IDE is installed in a system directory (such as `/opt/`), the script will automatically request `sudo` elevation if needed. You can also pipe directly into `sudo bash`:
-> ```bash
-> curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravity/main/setup.sh | sudo bash
-> ```
-
-### Windows (PowerShell 7+)
-
-Run the installer in PowerShell:
-
-```powershell
-irm https://raw.githubusercontent.com/mehdichamani/PersianAntigravity/main/setup.ps1 | iex
+#### Alternative (Download Zip archive):
+```bash
+curl -LO https://github.com/mehdichamani/PersianAntigravity/archive/refs/heads/main.zip
+unzip main.zip && cd PersianAntigravity-main
 ```
-
-*After installation, restart Antigravity to apply visual changes.*
 
 ---
 
-## 💻 Local Clone & Manual Usage
-
-If you prefer to clone the repository locally:
-
-```bash
-git clone https://github.com/mehdichamani/PersianAntigravity.git ~/projects/PersianAntigravity
-cd ~/projects/PersianAntigravity
-```
+### 2. Run Setup Script
 
 ### Linux / macOS (`setup.sh`)
 
@@ -107,6 +91,8 @@ pwsh -File ./setup.ps1 -ProxyLauncher
 pwsh -File ./setup.ps1 -Uninstall
 ```
 
+*After installation, restart Antigravity to apply visual changes.*
+
 ---
 
 ## 🌐 System Proxy Integration
@@ -128,8 +114,15 @@ PersianAntigravity/
 ├── LICENSE                          # MIT License
 ├── README.md                        # Persian Documentation (مستندات فارسی)
 ├── README.en.md                     # English Documentation
-├── setup.sh                         # Linux/macOS installation script
+├── setup.sh                         # Linux/macOS orchestrator installation script
 ├── setup.ps1                        # Windows PowerShell installation script
+├── lib/                             # Modular, clean shell modules
+│   ├── common.sh                    # Path detection and shared functions
+│   ├── fonts.sh                     # Vazirmatn font verification & installer
+│   ├── i18n.sh                      # Bilingual translation catalog (FA/EN)
+│   ├── patch-app.sh                 # Antigravity Desktop App patcher
+│   ├── patch-ide.sh                 # Workbench HTML & Markdown patcher
+│   └── proxy.sh                     # System proxy launcher installer
 ├── styles/
 │   ├── antigravity-chat-rtl.css     # Workbench chat & artifact stylesheet
 │   └── markdown-rtl.css             # User Markdown preview stylesheet

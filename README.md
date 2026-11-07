@@ -45,45 +45,27 @@
 
 ---
 
-## 🚀 راهنمای نصب سریع (One-Liner Install)
+## 🚀 راهنمای نصب و راه‌اندازی (Installation Guide)
 
-تنها با اجرای یک دستور در ترمینال، تمامی فایل‌ها به طور خودکار دریافت، تنظیم و اعمال می‌شوند:
+### ۱. دریافت مخزن پروژه (Clone or Download)
 
-### 🐧 لینوکس و مک (Linux & macOS)
-
-دستور زیر را در ترمینال (Bash/Zsh) اجرا کنید:
-
+#### روش پیشنهادی (با استفاده از Git):
 ```bash
-curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravity/main/setup.sh | bash
+git clone https://github.com/mehdichamani/PersianAntigravity.git
+cd PersianAntigravity
 ```
 
-> 💡 *نکته:* در صورت نصب Antigravity IDE در مسیرهای سیستمی (مانند `/opt/`)، اسکریپت به‌طور خودکار ارتقای دسترسی با `sudo` را انجام می‌دهد. همچنین می‌توانید مستقیماً دستور را با `sudo` اجرا کنید:
-> ```bash
-> curl -fsSL https://raw.githubusercontent.com/mehdichamani/PersianAntigravity/main/setup.sh | sudo bash
-> ```
-
-### 🪟 ویندوز (Windows PowerShell)
-
-پنجره PowerShell (ترجیحاً نسخه 7 یا بالاتر) را باز کرده و دستور زیر را وارد کنید:
-
-```powershell
-irm https://raw.githubusercontent.com/mehdichamani/PersianAntigravity/main/setup.ps1 | iex
+#### روش جایگزین (دانلود فایل فشرده بدون نیاز به Git):
+```bash
+curl -LO https://github.com/mehdichamani/PersianAntigravity/archive/refs/heads/main.zip
+unzip main.zip && cd PersianAntigravity-main
 ```
-
-> **نکته:** پس از اتمام نصب، برنامه یا محیط **Antigravity** را یک‌بار ببندید و مجدداً باز کنید تا تغییرات بصری اعمال شوند.
 
 ---
 
-## 💻 اجرای دستی از طریق سورس (Local Clone)
+### ۲. اجرای اسکریپت نصب
 
-در صورت تمایل به اجرای محلی یا بررسی کدها قبل از نصب:
-
-```bash
-git clone https://github.com/mehdichamani/PersianAntigravity.git ~/projects/PersianAntigravity
-cd ~/projects/PersianAntigravity
-```
-
-### در لینوکس و مک (`setup.sh`)
+#### 🐧 در لینوکس و مک (`setup.sh`)
 
 ```bash
 # بررسی وضعیت فعلی نصب (هم Antigravity IDE و هم Antigravity App)
@@ -109,7 +91,7 @@ cd ~/projects/PersianAntigravity
 
 > 💡 *در لینوکس، اسکریپت تنها برای ذخیره فایل‌ها در دایرکتوری‌های سیستمی مانند `/opt/antigravity-ide/` از شما دسترسی `sudo` خواهد خواست؛ پچ کردن Antigravity App مستقر در دایرکتوری کاربر بدون نیاز به sudo انجام می‌شود.*
 
-### در ویندوز (`setup.ps1`)
+#### 🪟 در ویندوز (`setup.ps1`)
 
 ```powershell
 # بررسی وضعیت فعلی
@@ -127,6 +109,8 @@ pwsh -File ./setup.ps1 -ProxyLauncher
 # حذف و بازگردانی فایل‌های اصلی
 pwsh -File ./setup.ps1 -Uninstall
 ```
+
+> **نکته:** پس از اتمام نصب، برنامه یا محیط **Antigravity** را یک‌بار ببندید و مجدداً باز کنید تا تغییرات بصری اعمال شوند.
 
 ---
 
@@ -149,8 +133,15 @@ PersianAntigravity/
 ├── LICENSE                          # مجوز نرم‌افزار (MIT)
 ├── README.md                        # مستندات فارسی پروژه
 ├── README.en.md                     # مستندات انگلیسی پروژه
-├── setup.sh                         # اسکریپت نصب و مدیریت لینوکس و مک
+├── setup.sh                         # اسکریپت هماهنگ‌کننده نصب (Linux / macOS)
 ├── setup.ps1                        # اسکریپت نصب و مدیریت ویندوز (PowerShell)
+├── lib/                             # ماژول‌های تفکیک‌شده و منظم
+│   ├── common.sh                    # توابع مشترک و تشخیص مسیرهای برنامه
+│   ├── fonts.sh                     # بررسی و نصب قلم وزیرمتن
+│   ├── i18n.sh                      # واژه‌نامه دوزبانه (فارسی و انگلیسی)
+│   ├── patch-app.sh                 # پچ اختصاصی Antigravity Desktop App
+│   ├── patch-ide.sh                 # پچ هسته Workbench و Markdown
+│   └── proxy.sh                     # راه‌اندازی میانبر لانچر با پروکسی سیستم
 ├── styles/
 │   ├── antigravity-chat-rtl.css     # استایل‌های شیک پنل چت و صفحات آرتیفکت
 │   └── markdown-rtl.css             # استایل‌های پیش‌نمایش فایل‌های Markdown
