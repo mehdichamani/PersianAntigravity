@@ -31,8 +31,11 @@ find_antigravity_app() {
         return 0
     fi
     local app_candidates=(
+        "$REAL_HOME/.local/share/AntigravityApp/resources/app.asar"
         "$REAL_HOME/.local/share/Antigravity/resources/app.asar"
+        "/opt/AntigravityApp/resources/app.asar"
         "/opt/Antigravity/resources/app.asar"
+        "/usr/lib/AntigravityApp/resources/app.asar"
         "/usr/lib/Antigravity/resources/app.asar"
         "/Applications/Antigravity.app/Contents/Resources/app.asar"
     )

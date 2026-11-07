@@ -182,38 +182,42 @@ do_uninstall() {
 
 do_status() {
     echo -e "${BOLD}${M[STATUS_HEADER]}${NC}"
-    echo -e "${M[STATUS_APP_DIR]}${CYAN}${APP_DIR:-${M[STATUS_MISSING]}}${NC}"
     echo -e "${M[STATUS_USER]}${CYAN}$REAL_USER${NC}"
-    echo -e "${M[STATUS_CONFIG]}${CYAN}$USER_CONFIG_DIR${NC}"
+    echo -e "${M[STATUS_TARGET]}${CYAN}$TARGET_CHOICE${NC}"
     echo ""
 
-    if [[ -n "$APP_DIR" ]]; then
-        local wb_dir="$APP_DIR/out/vs/workbench"
-        local html_file="$APP_DIR/out/vs/code/electron-browser/workbench/workbench.html"
-        local prod_file="$APP_DIR/product.json"
+    if [[ "$TARGET_CHOICE" == "all" || "$TARGET_CHOICE" == "ide" ]]; then
+        echo -e "${BOLD}--- Antigravity IDE ---${NC}"
+        echo -e "${M[STATUS_APP_DIR]}${CYAN}${APP_DIR:-${M[STATUS_MISSING]}}${NC}"
+        echo -e "${M[STATUS_CONFIG]}${CYAN}$USER_CONFIG_DIR${NC}"
 
-        if [[ -f "$wb_dir/antigravity-chat-rtl.css" ]]; then
-            echo -e "${M[STATUS_WB_CSS]}${GREEN}${M[STATUS_INSTALLED]}${NC}"
-        else
-            echo -e "${M[STATUS_WB_CSS]}${RED}${M[STATUS_MISSING]}${NC}"
-        fi
+        if [[ -n "$APP_DIR" ]]; then
+            local wb_dir="$APP_DIR/out/vs/workbench"
+            local html_file="$APP_DIR/out/vs/code/electron-browser/workbench/workbench.html"
+            local prod_file="$APP_DIR/product.json"
 
-        if [[ -f "$wb_dir/antigravity-chat-rtl.js" ]]; then
-            echo -e "${M[STATUS_WB_JS]}${GREEN}${M[STATUS_INSTALLED]}${NC}"
-        else
-            echo -e "${M[STATUS_WB_JS]}${RED}${M[STATUS_MISSING]}${NC}"
-        fi
+            if [[ -f "$wb_dir/antigravity-chat-rtl.css" ]]; then
+                echo -e "${M[STATUS_WB_CSS]}${GREEN}${M[STATUS_INSTALLED]}${NC}"
+            else
+                echo -e "${M[STATUS_WB_CSS]}${RED}${M[STATUS_MISSING]}${NC}"
+            fi
 
-        if grep -q "antigravity-chat-rtl.css" "$html_file" 2>/dev/null && grep -q "antigravity-chat-rtl.js" "$html_file" 2>/dev/null; then
-            echo -e "${M[STATUS_HTML]}${GREEN}${M[STATUS_PATCHED]}${NC}"
-        elif grep -q "antigravity-chat-rtl.css" "$html_file" 2>/dev/null; then
-            echo -e "${M[STATUS_HTML]}${YELLOW}${M[STATUS_PARTIAL]}${NC}"
-        else
-            echo -e "${M[STATUS_HTML]}${RED}${M[STATUS_NOT_PATCHED]}${NC}"
-        fi
+            if [[ -f "$wb_dir/antigravity-chat-rtl.js" ]]; then
+                echo -e "${M[STATUS_WB_JS]}${GREEN}${M[STATUS_INSTALLED]}${NC}"
+            else
+                echo -e "${M[STATUS_WB_JS]}${RED}${M[STATUS_MISSING]}${NC}"
+            fi
 
-        local chk_status
-        chk_status=$(python3 -c "
+            if grep -q "antigravity-chat-rtl.css" "$html_file" 2>/dev/null && grep -q "antigravity-chat-rtl.js" "$html_file" 2>/dev/null; then
+                echo -e "${M[STATUS_HTML]}${GREEN}${M[STATUS_PATCHED]}${NC}"
+            elif grep -q "antigravity-chat-rtl.css" "$html_file" 2>/dev/null; then
+                echo -e "${M[STATUS_HTML]}${YELLOW}${M[STATUS_PARTIAL]}${NC}"
+            else
+                echo -e "${M[STATUS_HTML]}${RED}${M[STATUS_NOT_PATCHED]}${NC}"
+            fi
+
+            local chk_status
+            chk_status=$(python3 -c "
 import json
 try:
     with open('$prod_file', 'r', encoding='utf-8') as f:
@@ -226,27 +230,32 @@ except:
     print('unknown')
 " 2>/dev/null || echo "error")
 
-        if [[ "$chk_status" == "bypassed" ]]; then
-            echo -e "${M[STATUS_CHK]}${GREEN}${M[STATUS_BYPASS_ACTIVE]}${NC}"
-        else
-            echo -e "${M[STATUS_CHK]}${YELLOW}${M[STATUS_BYPASS_PENDING]}${NC}"
+            if [[ "$chk_status" == "bypassed" ]]; then
+                echo -e "${M[STATUS_CHK]}${GREEN}${M[STATUS_BYPASS_ACTIVE]}${NC}"
+            else
+                echo -e "${M[STATUS_CHK]}${YELLOW}${M[STATUS_BYPASS_PENDING]}${NC}"
+            fi
         fi
+
+        if [[ -f "$MARKDOWN_CSS" ]]; then
+            echo -e "${M[STATUS_MD]}${GREEN}${M[STATUS_CONFIGURED]}${NC}"
+        else
+            echo -e "${M[STATUS_MD]}${YELLOW}${M[STATUS_NOT_CONFIGURED]}${NC}"
+        fi
+        echo ""
     fi
 
-    if [[ -f "$MARKDOWN_CSS" ]]; then
-        echo -e "${M[STATUS_MD]}${GREEN}${M[STATUS_CONFIGURED]}${NC}"
-    else
-        echo -e "${M[STATUS_MD]}${YELLOW}${M[STATUS_NOT_CONFIGURED]}${NC}"
-    fi
-
-    if [[ -n "$ANTIGRAVITY_APP_ASAR" && -f "$ANTIGRAVITY_APP_ASAR" ]]; then
-        if [[ -f "$ANTIGRAVITY_APP_ASAR.original" ]]; then
-            echo -e "${M[STATUS_APP_ASAR]}${GREEN}${M[STATUS_PATCHED]}${NC} ($ANTIGRAVITY_APP_ASAR)"
+    if [[ "$TARGET_CHOICE" == "all" || "$TARGET_CHOICE" == "app" ]]; then
+        echo -e "${BOLD}--- Antigravity App (Desktop) ---${NC}"
+        if [[ -n "$ANTIGRAVITY_APP_ASAR" && -f "$ANTIGRAVITY_APP_ASAR" ]]; then
+            if [[ -f "$ANTIGRAVITY_APP_ASAR.original" ]]; then
+                echo -e "${M[STATUS_APP_ASAR]}${GREEN}${M[STATUS_PATCHED]}${NC} ($ANTIGRAVITY_APP_ASAR)"
+            else
+                echo -e "${M[STATUS_APP_ASAR]}${YELLOW}${M[STATUS_NOT_PATCHED]}${NC} ($ANTIGRAVITY_APP_ASAR)"
+            fi
         else
-            echo -e "${M[STATUS_APP_ASAR]}${YELLOW}${M[STATUS_NOT_PATCHED]}${NC} ($ANTIGRAVITY_APP_ASAR)"
+            echo -e "${M[STATUS_APP_ASAR]}${RED}${M[STATUS_MISSING]}${NC}"
         fi
-    else
-        echo -e "${M[STATUS_APP_ASAR]}${RED}${M[STATUS_MISSING]}${NC}"
     fi
 }
 
