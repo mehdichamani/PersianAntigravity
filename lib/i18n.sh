@@ -80,6 +80,11 @@ if [[ "$LANG_CHOICE" == "fa" ]]; then
     M[APP_RESTORE_OK]="[✓] نرم‌افزار Antigravity App از نسخه پشتیبان بازگردانی شد."
     M[STATUS_APP_ASAR]="  Antigravity App:    "
     M[NEED_NODE_ASAR]="[!] برای پچ کردن Antigravity App ابزار npx و Node.js نیاز است."
+    M[SELECT_TARGET_HEADER]="محیط هدف مورد نظر خود را برای اعمال تغییرات انتخاب کنید:"
+    M[TARGET_OPT_ALL]="[1] هر دو محیط (هم Antigravity IDE و هم Antigravity App) [پیش‌فرض]"
+    M[TARGET_OPT_IDE]="[2] فقط محیط توسعه Antigravity IDE"
+    M[TARGET_OPT_APP]="[3] فقط نرم‌افزار Antigravity App (Desktop)"
+    M[TARGET_PROMPT]="شماره گزینه مورد نظر را وارد کنید [1/2/3] (پیش‌فرض: 1): "
 
 else
     M[ERR_APP_DIR]="\n[✗] Error: Antigravity IDE 'resources/app' directory could not be found!"
@@ -157,4 +162,9 @@ else
     M[APP_RESTORE_OK]="[✓] Antigravity App restored from original backup."
     M[STATUS_APP_ASAR]="  Antigravity App:    "
     M[NEED_NODE_ASAR]="[!] Node.js and npx are required to patch Antigravity App."
+    M[SELECT_TARGET_HEADER]="Select the target environment to apply changes:"
+    M[TARGET_OPT_ALL]="[1] Both (Antigravity IDE & Antigravity App) [Default]"
+    M[TARGET_OPT_IDE]="[2] Antigravity IDE only"
+    M[TARGET_OPT_APP]="[3] Antigravity App only (Desktop)"
+    M[TARGET_PROMPT]="Enter choice [1/2/3] (Default: 1): "
 fi

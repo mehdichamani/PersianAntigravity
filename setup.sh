@@ -15,7 +15,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 # Language & Target argument parsing
 LANG_CHOICE=""
-TARGET_CHOICE="all"
+TARGET_CHOICE=""
 FILTERED_ARGS=()
 
 for arg in "$@"; do
@@ -35,47 +35,45 @@ for arg in "$@"; do
         --app-only)
             TARGET_CHOICE="app"
             ;;
+        --all)
+            TARGET_CHOICE="all"
+            ;;
         *)
             FILTERED_ARGS+=("$arg")
             ;;
     esac
 done
 
+first_cmd="${FILTERED_ARGS[0]:-install}"
+is_help="false"
+if [[ "$first_cmd" == "help" || "$first_cmd" == "--help" || "$first_cmd" == "-h" ]]; then
+    is_help="true"
+fi
+
+tty_in=""
+if [ -t 0 ]; then
+    tty_in="stdin"
+fi
+
 if [[ -z "$LANG_CHOICE" ]]; then
-    first_arg="${FILTERED_ARGS[0]:-}"
-    if [[ "$first_arg" != "help" && "$first_arg" != "--help" && "$first_arg" != "-h" ]]; then
-        tty_in=""
-        if [ -t 0 ]; then
-            tty_in="stdin"
-        elif [ -r /dev/tty ]; then
-            tty_in="/dev/tty"
-        fi
+    if [[ "$is_help" != "true" && -n "$tty_in" ]]; then
+        echo -e "\033[1;36m======================================================================\033[0m"
+        echo -e "به پروژه فارسی ساز آنتی گرویتی (PersianAntigravity) خوش آمدید!"
+        echo -e "\033[1;33mاگر این متن فارسی را بدون به‌هم‌ریختگی می‌بینید، با فارسی ادامه دهید.\033[0m"
+        echo -e "----------------------------------------------------------------------"
+        echo -e "If the Persian text above looks garbled or broken, continue in English."
+        echo -e "\033[1;36m======================================================================\033[0m"
+        echo -e "  [1] فارسی (Persian) [Default]"
+        echo -e "  [2] English\n"
 
-        if [[ -n "$tty_in" ]]; then
-            echo -e "\033[1;36m======================================================================\033[0m"
-            echo -e "به پروژه فارسی ساز آنتی گرویتی (PersianAntigravity) خوش آمدید!"
-            echo -e "\033[1;33mاگر این متن فارسی را بدون به‌هم‌ریختگی می‌بینید، با فارسی ادامه دهید.\033[0m"
-            echo -e "----------------------------------------------------------------------"
-            echo -e "If the Persian text above looks garbled or broken, continue in English."
-            echo -e "\033[1;36m======================================================================\033[0m"
-            echo -e "  [1] فارسی (Persian) [Default]"
-            echo -e "  [2] English\n"
+        read -r -p "Select language / انتخاب زبان [1/2] (Default: 1): " user_input || user_input=""
 
-            if [[ "$tty_in" == "/dev/tty" ]]; then
-                read -r -p "Select language / انتخاب زبان [1/2] (Default: 1): " user_input < /dev/tty || user_input=""
-            else
-                read -r -p "Select language / انتخاب زبان [1/2] (Default: 1): " user_input || user_input=""
-            fi
-
-            if [[ "$user_input" =~ ^[[:space:]]*2[[:space:]]*$ ]]; then
-                LANG_CHOICE="en"
-                echo -e "\033[1;32mEnglish selected.\033[0m\n"
-            else
-                LANG_CHOICE="fa"
-                echo -e "\033[1;32mزبان فارسی انتخاب شد.\033[0m\n"
-            fi
+        if [[ "$user_input" =~ ^[[:space:]]*2[[:space:]]*$ ]]; then
+            LANG_CHOICE="en"
+            echo -e "\033[1;32mEnglish selected.\033[0m\n"
         else
             LANG_CHOICE="fa"
+            echo -e "\033[1;32mزبان فارسی انتخاب شد.\033[0m\n"
         fi
     else
         LANG_CHOICE="fa"
@@ -95,6 +93,34 @@ source "$SCRIPT_DIR/lib/patch-ide.sh"
 source "$SCRIPT_DIR/lib/patch-app.sh"
 # shellcheck source=lib/proxy.sh
 source "$SCRIPT_DIR/lib/proxy.sh"
+
+# Interactive Target selection (if not passed as argument and not help/proxy)
+if [[ -z "$TARGET_CHOICE" ]]; then
+    if [[ "$is_help" != "true" && "$first_cmd" != "proxy" && "$first_cmd" != "proxy-launcher" && -n "$tty_in" ]]; then
+        echo -e "${CYAN}----------------------------------------------------------------------${NC}"
+        echo -e "${BOLD}${M[SELECT_TARGET_HEADER]}${NC}"
+        echo -e "  ${M[TARGET_OPT_ALL]}"
+        echo -e "  ${M[TARGET_OPT_IDE]}"
+        echo -e "  ${M[TARGET_OPT_APP]}\n"
+
+        read -r -p "${M[TARGET_PROMPT]}" target_input || target_input=""
+
+        case "$target_input" in
+            2)
+                TARGET_CHOICE="ide"
+                ;;
+            3)
+                TARGET_CHOICE="app"
+                ;;
+            *)
+                TARGET_CHOICE="all"
+                ;;
+        esac
+        echo ""
+    else
+        TARGET_CHOICE="all"
+    fi
+fi
 
 # Locate applications
 find_antigravity_app || true
