@@ -17,6 +17,8 @@
 </p>
 
 <p align="center">
+  <img src="assets/release_announcement.png" alt="انتشار ریپازیتوری PersianAntigravity در گیت‌هاب" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-bottom: 12px;">
+  <br>
   <img src="assets/preview.webp" alt="پیش‌نمایش فارسی‌ساز Antigravity" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
 </p>
 

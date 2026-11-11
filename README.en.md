@@ -9,6 +9,8 @@
 [![Target](https://img.shields.io/badge/Target-Antigravity%20IDE%20%26%20App-blueviolet.svg)](#)
 
 <p align="center">
+  <img src="assets/release_announcement.png" alt="PersianAntigravity GitHub Release Announcement" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-bottom: 12px;">
+  <br>
   <img src="assets/preview.webp" alt="Persian Antigravity Preview" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
 </p>
 
